@@ -58,7 +58,7 @@ void ft53xx_init(uint16_t dev_addr) {
     uint8_t data_buf;
     esp_err_t ret;
     ESP_LOGI(TAG, "Found touch panel controller");
-    if ((ret = ft6x06_i2c_read8(dev_addr, FT53XX_REG_CHIPID, &data_buf) != ESP_OK))
+    if ((ret = ft53xx_i2c_read8(dev_addr, FT53XX_REG_CHIPID, &data_buf) != ESP_OK))
         ESP_LOGE(TAG, "Error reading from device: %s",
                  esp_err_to_name(ret));    // Only show error the first time
     ESP_LOGI(TAG, "\tDevice ID: 0x%02x", data_buf);
@@ -86,12 +86,19 @@ bool ft53xx_read(lv_indev_drv_t *drv, lv_indev_data_t *data) {
         return 0x00;
     }
     uint8_t data_buf[32];        // 1 byte status, 2 bytes X, 2 bytes Y
+    uint8_t write_buf = 0;
     static int16_t last_x = 0;  // 12bit pixel value
     static int16_t last_y = 0;  // 12bit pixel value
 
-    esp_err_t ret = lvgl_i2c_read(CONFIG_LV_I2C_TOUCH_PORT, current_dev_addr, FT6X36_TD_STAT_REG, &data_buf, 32);
+    /* Following how Adafruit_FT5336 library got touch data */
+    // Write nothing first
+    esp_err_t ret = lvgl_i2c_write(CONFIG_LV_I2C_TOUCH_PORT, current_dev_addr, I2C_NO_REG, &write_buf, 1);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Error talking to touch IC: %s", esp_err_to_name(ret));
+        ESP_LOGE(TAG, "Error writing to touch IC: %s", esp_err_to_name(ret));
+    }
+    ret = lvgl_i2c_read(CONFIG_LV_I2C_TOUCH_PORT, current_dev_addr, I2C_NO_REG, &data_buf[0], 32);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Error reading from touch IC: %s", esp_err_to_name(ret));
     }
     uint8_t touch_pnt_cnt = data_buf[FT5336_TD_STATUS];  // Number of detected touch points
 
@@ -105,16 +112,16 @@ bool ft53xx_read(lv_indev_drv_t *drv, lv_indev_data_t *data) {
     last_x = ((data_buf[FT5336_TOUCH1_XH] & 0xF) << 8) | (data_buf[FT5336_TOUCH1_XL]);
     last_y = ((data_buf[FT5336_TOUCH1_YH] & 0xF) << 8) | (data_buf[FT5336_TOUCH1_YL]);
 
+#if CONFIG_LV_FT53XX_SWAPXY
+    int16_t swap_buf = last_x;
+    last_x = last_y;
+    last_y = swap_buf;
 #if CONFIG_LV_FT53XX_INVERT_X
     last_x =  LV_HOR_RES - last_x;
 #endif
 #if CONFIG_LV_FT53XX_INVERT_Y
     last_y = LV_VER_RES - last_y;
 #endif
-#if CONFIG_LV_FT53XX_SWAPXY
-    int16_t swap_buf = last_x;
-    last_x = last_y;
-    last_y = swap_buf;
 #endif
     data->point.x = last_x;
     data->point.y = last_y;

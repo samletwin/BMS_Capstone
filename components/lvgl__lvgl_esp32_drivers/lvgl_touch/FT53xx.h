@@ -8,8 +8,8 @@
  * 
  */
 
-#ifndef FT53xx_H
-#define FT53xx_H
+#ifndef __FT53XX_H
+#define __FT53XX_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -81,4 +81,4 @@ bool ft53xx_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 }
 #endif
 
-#endif // FT53xx_H
+#endif // __FT53XX_H

@@ -20,6 +20,8 @@
         "tp_spi.h": "c",
         "array": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "stdint.h": "c",
+        "ft53xx.h": "c"
     }
 }
