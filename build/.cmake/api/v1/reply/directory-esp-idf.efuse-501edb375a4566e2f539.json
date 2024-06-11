@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "esp-idf/efuse",
+		"source" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/efuse"
+	}
+}

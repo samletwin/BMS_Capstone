@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "esp-idf/tinyusb",
+		"source" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/tinyusb"
+	}
+}

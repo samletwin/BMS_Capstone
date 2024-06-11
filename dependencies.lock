@@ -1,0 +1,21 @@
+dependencies:
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 4.4.7
+  lvgl/lvgl:
+    component_hash: 77ce3a05acc0f9709986d61ab2655f6e15c5803f8866aa7fe94a6cfeee6c0cd1
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 7.11.0
+  lvgl__lvgl_esp32_drivers:
+    component_hash: null
+    source:
+      path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
+      type: local
+    version: 0.0.3
+manifest_hash: 1a2ef7d2d4f3c497d01bb308ec5044dbef4dad3e3f5ce7f8fc081a087be863bc
+target: esp32c3
+version: 1.0.0

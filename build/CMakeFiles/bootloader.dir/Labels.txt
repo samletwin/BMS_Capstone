@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/CMakeFiles/bootloader
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/CMakeFiles/bootloader.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/CMakeFiles/bootloader-complete.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

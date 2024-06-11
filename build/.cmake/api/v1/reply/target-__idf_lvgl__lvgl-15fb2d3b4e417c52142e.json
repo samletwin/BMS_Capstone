@@ -1,0 +1,1667 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "esp-idf/lvgl__lvgl/liblvgl__lvgl.a"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"idf_component_register",
+			"add_compile_options",
+			"add_c_compile_options",
+			"set_property",
+			"__component_set_dependencies",
+			"__component_set_all_dependencies",
+			"target_compile_definitions",
+			"include_directories",
+			"target_include_directories",
+			"__component_add_include_dirs"
+		],
+		"files" : 
+		[
+			"C:/Users/Sam/esp/v4.4.7/esp-idf/tools/cmake/component.cmake",
+			"managed_components/lvgl__lvgl/CMakeLists.txt",
+			"C:/Users/Sam/esp/v4.4.7/esp-idf/tools/cmake/utilities.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 478,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 456,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 287,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 467,
+				"parent" : 1
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 512,
+				"parent" : 1
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 348,
+				"parent" : 7
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 333,
+				"parent" : 8
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 455,
+				"parent" : 1
+			},
+			{
+				"command" : 10,
+				"file" : 0,
+				"line" : 480,
+				"parent" : 1
+			},
+			{
+				"command" : 9,
+				"file" : 0,
+				"line" : 309,
+				"parent" : 12
+			},
+			{
+				"command" : 9,
+				"file" : 0,
+				"line" : 309,
+				"parent" : 12
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-march=rv32imc "
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Werror=all"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-error=unused-function"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-error=unused-variable"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-error=deprecated-declarations"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-unused-parameter"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-sign-compare"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-ggdb"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-error=format="
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-nostartfiles"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-format"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Og"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fmacro-prefix-map=C:/Users/Sam/Desktop/capstone/singleCell_espidf=."
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fmacro-prefix-map=C:/Users/Sam/esp/v4.4.7/esp-idf=IDF"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fstrict-volatile-bitfields"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Wno-error=unused-but-set-variable"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fno-jump-tables"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fno-tree-switch-conversion"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-std=gnu99"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Wno-old-style-declaration"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-D_GNU_SOURCE"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-DIDF_VER=\\\"v4.4.7\\\""
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-DESP_PLATFORM"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-D_POSIX_READER_WRITER_LOCKS"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 9,
+					"define" : "HAVE_CONFIG_H"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "LV_CONF_INCLUDE_SIMPLE"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "LV_LVGL_H_INCLUDE_SIMPLE"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "MBEDTLS_CONFIG_FILE=\"mbedtls/esp_config.h\""
+				},
+				{
+					"backtrace" : 9,
+					"define" : "UNITY_INCLUDE_CONFIG_H"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "WITH_POSIX"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 11,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/build/config"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/managed_components/lvgl__lvgl"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/managed_components/lvgl__lvgl/src"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/newlib/platform_include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/freertos/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/freertos/include/esp_additions/freertos"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/freertos/port/riscv/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/freertos/include/esp_additions"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hw_support/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hw_support/include/soc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hw_support/include/soc/esp32c3"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hw_support/port/esp32c3/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hw_support/port/esp32c3/private_include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/heap/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/log/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/lwip/include/apps"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/lwip/include/apps/sntp"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/lwip/lwip/src/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/lwip/port/esp32/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/lwip/port/esp32/include/arch"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/soc/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/soc/esp32c3/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/soc/esp32c3/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/hal/esp32c3/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/hal/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/hal/platform_port/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_rom/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_rom/include/esp32c3"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_rom/esp32c3"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_common/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_system/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_system/port/soc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_system/port/include/riscv"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_system/port/public_compat"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/riscv/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/driver/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/driver/esp32c3/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_pm/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_ringbuf/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/efuse/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/efuse/esp32c3/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/vfs/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_wifi/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_event/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_netif/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_eth/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/tcpip_adapter/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_phy/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_phy/esp32c3/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_ipc/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/app_trace/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_timer/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/mbedtls/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/mbedtls/mbedtls/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/mbedtls/esp_crt_bundle/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/app_update/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/spi_flash/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/bootloader_support/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/nvs_flash/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/pthread/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_gdbstub/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_gdbstub/riscv"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_gdbstub/esp32c3"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/espcoredump/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/espcoredump/include/port/riscv"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/wpa_supplicant/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/wpa_supplicant/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/wpa_supplicant/esp_supplicant/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/ieee802154/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/console"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/asio/asio/asio/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/asio/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/cbor/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/unity/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/unity/unity/src"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/cmock/CMock/src"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/coap/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/coap/libcoap/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/nghttp/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/nghttp/nghttp2/lib/includes"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp-tls"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp-tls/esp-tls-crypto"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_adc_cal/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_hid/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/tcp_transport/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_http_client/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_http_server/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_https_ota/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_lcd/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_lcd/interface"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/protobuf-c/protobuf-c"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/protocomm/include/common"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/protocomm/include/security"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/protocomm/include/transports"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/mdns/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_local_ctrl/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/sdmmc/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_serial_slave_link/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/esp_websocket_client/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/expat/expat/expat/lib"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/expat/port/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/wear_levelling/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/fatfs/diskio"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/fatfs/vfs"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/fatfs/src"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/freemodbus/freemodbus/common/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/idf_test/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/idf_test/include/esp32c3"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/jsmn/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/json/cJSON"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/libsodium/libsodium/src/libsodium/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/libsodium/port_include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/mqtt/esp-mqtt/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/openssl/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/spiffs/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/esp/v4.4.7/esp-idf/components/wifi_provisioning/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/components/lvgl__lvgl_esp32_drivers"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/components/lvgl__lvgl_esp32_drivers/lvgl_tft"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/Sam/Desktop/capstone/singleCell_espidf/components/lvgl__lvgl_esp32_drivers/lvgl_touch"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75,
+				76,
+				77,
+				78,
+				79,
+				80,
+				81,
+				82,
+				83,
+				84,
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94,
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"id" : "__idf_lvgl__lvgl_esp32_drivers::@5758e7ce699084d94871"
+		}
+	],
+	"id" : "__idf_lvgl__lvgl::@7baf6209f13c88c0bab5",
+	"name" : "__idf_lvgl__lvgl",
+	"nameOnDisk" : "liblvgl__lvgl.a",
+	"paths" : 
+	{
+		"build" : "esp-idf/lvgl__lvgl",
+		"source" : "managed_components/lvgl__lvgl"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75,
+				76,
+				77,
+				78,
+				79,
+				80,
+				81,
+				82,
+				83,
+				84,
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94,
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_disp.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_group.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_indev.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_obj.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_refr.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_core/lv_style.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_arc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_blend.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_img.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_label.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_line.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_mask.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_rect.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_draw_triangle.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_img_buf.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_img_cache.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_draw/lv_img_decoder.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_dejavu_16_persian_hebrew.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_fmt_txt.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_loader.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_10.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_12.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_12_subpx.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_14.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_16.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_18.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_20.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_22.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_24.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_26.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_28.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_28_compressed.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_30.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_32.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_34.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_36.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_38.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_40.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_42.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_44.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_46.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_48.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_montserrat_8.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_simsun_16_cjk.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_unscii_16.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_font/lv_font_unscii_8.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_gpu/lv_gpu_nxp_pxp.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_gpu/lv_gpu_nxp_pxp_osa.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_gpu/lv_gpu_nxp_vglite.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_gpu/lv_gpu_stm32_dma2d.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_hal/lv_hal_disp.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_hal/lv_hal_indev.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_hal/lv_hal_tick.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_anim.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_area.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_async.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_bidi.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_color.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_debug.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_fs.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_gc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_ll.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_log.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_math.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_mem.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_printf.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_task.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_templ.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_txt.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_txt_ap.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_misc/lv_utils.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_themes/lv_theme.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_themes/lv_theme_empty.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_themes/lv_theme_material.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_themes/lv_theme_mono.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_themes/lv_theme_template.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_arc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_bar.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_btn.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_btnmatrix.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_calendar.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_canvas.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_chart.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_checkbox.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_cont.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_cpicker.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_dropdown.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_gauge.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_img.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_imgbtn.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_keyboard.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_label.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_led.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_line.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_linemeter.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_list.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_msgbox.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_objmask.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_objx_templ.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_page.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_roller.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_slider.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_spinbox.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_spinner.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_switch.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_table.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_tabview.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_textarea.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_tileview.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "managed_components/lvgl__lvgl/src/lv_widgets/lv_win.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}
