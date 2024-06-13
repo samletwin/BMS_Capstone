@@ -12,7 +12,8 @@ typedef void (*set_sohConfig_param)(uint16_t val);
 
 static set_sohConfig_param set_sohConfig_param_fp;
 static char dropdownText[32];
-static void create_keyboard(lv_obj_t* scr, lv_obj_t ta);
+static uint8_t selectedVal;
+static void create_keyboard(lv_obj_t* scr, lv_obj_t *ta);
 
 /* BUTTON EVENT - Discharge battery */
 static void event_handler_cb_main_single_cell_switch_discharge_bat(lv_obj_t *obj, lv_event_t event) {
@@ -61,38 +62,47 @@ static void cancel_button_event_handler(lv_obj_t *obj, lv_event_t event) {
 static void confirm_button_event_handler(lv_obj_t *obj, lv_event_t event) {
     if (event == LV_EVENT_CLICKED) {
         uint16_t textVal = atoi(lv_textarea_get_text(objects.key_text_area));
-        set_sohConfig_param_fp(textVal);
+        printf("textVal %u", textVal);
+        if (selectedVal == 0) 
+            set_sohConfig_dischargePeriod_ms_ui16(textVal);
+        else if (selectedVal == 1) 
+            set_sohConfig_numDischarges_ui8(textVal);
+        else if (selectedVal == 2)
+            set_sohConfig_sampleRate_hz_ui16(textVal);
         loadScreen(SCREEN_ID_SETTINGS);
     }
 }
 
 static void ta_event_cb(lv_obj_t * ta_local, lv_event_t e) {
     if (e == LV_EVENT_CLICKED && objects.keyboard == NULL) {
-        create_keyboard(objects.keypad_screen, *objects.key_text_area);
+        create_keyboard(objects.keypad_screen, objects.key_text_area);
     }
 }
 
 static void kb_event_cb(lv_obj_t * keyboard, lv_event_t e)
 {
-    lv_keyboard_def_event_cb(objects.keyboard, e);
-    if(e == LV_EVENT_CANCEL) {
-        lv_keyboard_set_textarea(objects.keyboard, NULL);
-        lv_obj_del(objects.keyboard);
-        objects.keyboard = NULL;
+    lv_keyboard_def_event_cb(keyboard, e);
+    if(e == LV_EVENT_CANCEL || e == LV_EVENT_APPLY) {
+        if(NULL != objects.keyboard) {
+            lv_keyboard_set_textarea(objects.keyboard, NULL);
+            lv_obj_del(objects.keyboard);
+            objects.keyboard = NULL;
+        }
     }
 }
 
 static void event_handler_drop_down(lv_obj_t * obj, lv_event_t event)
 {
+    selectedVal= lv_dropdown_get_selected(obj);
+    printf("Selected Val %u\n",selectedVal);
+    lv_dropdown_get_selected_str(obj, dropdownText, sizeof(dropdownText)); 
+    dropdownText[31] = '\0';
+    printf(dropdownText);
     if(event == LV_EVENT_VALUE_CHANGED) {
-        uint8_t selectedVal= lv_dropdown_get_selected(obj);
-        lv_dropdown_get_selected_str(obj, dropdownText, sizeof(dropdownText)); 
-        if (selectedVal == 0) 
-            set_sohConfig_param_fp = set_sohConfig_dischargePeriod_ms_ui16;
-        else if (selectedVal == 1) 
-            set_sohConfig_param_fp = set_sohConfig_numDischarges_ui8;
-        else if (selectedVal == 2)
-            set_sohConfig_param_fp = set_sohConfig_sampleRate_hz_ui16;
+        // selectedVal= lv_dropdown_get_selected(obj);
+        // printf("Selected Val %u",selectedVal);
+        // lv_dropdown_get_selected_str(obj, dropdownText, sizeof(dropdownText)); 
+
     }
 }
 
@@ -325,7 +335,7 @@ void create_table(lv_obj_t *scr)
 {
     /* Create a table on the page */
     lv_obj_t *table = lv_table_create(scr, NULL);
-
+        
     /* Set the size of the table */
     lv_obj_set_size(table, 300, 300); // Set the size of the table
 
@@ -409,7 +419,7 @@ void create_screen_settings() {
     create_table(parent_obj);
 }
 
-static void create_keyboard(lv_obj_t* scr, lv_obj_t ta) {
+static void create_keyboard(lv_obj_t* scr, lv_obj_t *ta) {
     // /* Create a keyboard */
     lv_obj_t *kb = lv_keyboard_create(scr, NULL);
     objects.keyboard = kb;
@@ -418,7 +428,7 @@ static void create_keyboard(lv_obj_t* scr, lv_obj_t ta) {
     lv_obj_align(kb, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
     lv_obj_set_event_cb(kb, kb_event_cb);
     lv_keyboard_set_cursor_manage(kb, true);
-    lv_keyboard_set_textarea(kb, &ta);
+    lv_keyboard_set_textarea(kb, ta);
 }
 
 void create_num_keyboard_screen(void) {
@@ -436,7 +446,7 @@ void create_num_keyboard_screen(void) {
     lv_obj_set_event_cb(ta, ta_event_cb);
 
 
-    create_keyboard(scr, *ta);
+    create_keyboard(scr, ta);
     // /* Focus the text area and disable unfocus */
     // lv_textarea_set_text(ta, "");
     // lv_textarea_set_one_line(ta, true);
@@ -451,7 +461,7 @@ void create_num_keyboard_screen(void) {
     lv_label_set_text(label_edit, "Editing value");
     lv_obj_t *label_var = lv_label_create(scr, NULL);
     lv_obj_set_pos(label_var, 240, 125);
-    lv_label_set_text(label_var, dropdownText);
+    lv_label_set_text(label_var, &dropdownText);
 
     // /* Create a cancel button */
     lv_obj_t *btn_cancel = lv_btn_create(scr, NULL);
