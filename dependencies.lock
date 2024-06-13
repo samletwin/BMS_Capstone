@@ -1,4 +1,10 @@
 dependencies:
+  espressif/esp-dsp:
+    component_hash: 3e7bbd487f1357a1d4944d0c85966d049501ea281b8a4c7f93f7cfedd5b7f23d
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.4.12
   idf:
     component_hash: null
     source:
@@ -16,6 +22,6 @@ dependencies:
       path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
       type: local
     version: 0.0.3
-manifest_hash: 1a2ef7d2d4f3c497d01bb308ec5044dbef4dad3e3f5ce7f8fc081a087be863bc
+manifest_hash: ca222f0d885204989d480084bf97aaefd7d6725bc9549b08f52fabcaa0061bbb
 target: esp32c3
 version: 1.0.0

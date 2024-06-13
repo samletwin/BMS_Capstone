@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "global_vars.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -19,6 +20,7 @@
 #include "freertos/semphr.h"
 #include "esp_system.h"
 #include "driver/gpio.h"
+#include "esp_log.h"
 
 /* Littlevgl specific */
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
@@ -29,36 +31,216 @@
 
 #include "lvgl_helpers.h"
 
+#include "ui/ui.h"
+#include "adc.h"
+#include "gpio.h"
+#include "soh.h"
+#include "timing.h"
+
+#include "main_cfg.h"
+
 /*********************
  *      DEFINES
  *********************/
-#define TAG "demo"
-#define LV_TICK_PERIOD_MS 1
+#define TAG "MAIN"
+
 
 /**********************
  *  STATIC PROTOTYPES
  **********************/
 static void lv_tick_task(void *arg);
-static void guiTask(void *pvParameter);
-static void create_demo_application(void);
+static void adc_read_task(void *pvParameter);
+static void gui_to_controller_task(void *pvParameter);
+static void lv_gui_main_task(void *pvParameter);
+static void lv_gui_update_variables_task(void *pvParameter);
 
-/**********************
- *   APPLICATION MAIN
- **********************/
+static void start_soh_measurement();
+
+static SemaphoreHandle_t xGuiSemaphore;
+static uint16_t * adc_buffer_bat_volt_mV_aui16;
+static uint16_t * adc_buffer_bat_cur_mA_aui16;
+static uint16_t * adc_buffer_timestamp_ms_aui16;
+static bool lvgl_ui_is_init = false;
+static soh_result res = (soh_result){0};
+
+static bool adc_log_readings_flag_b = false;
+
+/* ---------------------------------------------------------------------------------------
+    APPLICATION MAIN
+ --------------------------------------------------------------------------------------- */
 void app_main() {
-
+    /* INIT */
+    adc_init();
+    gpio_init();
+    timer_initialize();
     /* If you want to use a task to create the graphic, you NEED to create a Pinned task
      * Otherwise there can be problem such as memory corruption and so on.
-     * NOTE: When not using Wi-Fi nor Bluetooth you can pin the guiTask to core 0 */
-    xTaskCreatePinnedToCore(guiTask, "gui", 4096*2, NULL, 0, NULL, 1);
+     * NOTE: When not using Wi-Fi nor Bluetooth you can pin the lv_gui_main_task to core 0 */
+    xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
+    
+    xTaskCreate(adc_read_task, "ADC Read Task", 4096, NULL, 1, NULL);
+    xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
+    xTaskCreate(gui_to_controller_task, "gui to controller task", 2048, NULL, 1, NULL);
 }
 
-/* Creates a semaphore to handle concurrent call to lvgl stuff
- * If you wish to call *any* lvgl function from other threads/tasks
- * you should lock on the very same semaphore! */
-SemaphoreHandle_t xGuiSemaphore;
+static void lv_gui_update_variables_task(void *pvParameter) {
+    while (1) {
+        if (true == lvgl_ui_is_init) {
+            if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
+                tick_screen(SCREEN_ID_MAIN_SINGLE_CELL); // TODO: update screens.c to tick active screen - for now this is sufficient
+                xSemaphoreGive(xGuiSemaphore);
+            }
+        }
+        else
+            ESP_LOGD(TAG, "Not updating GUI vars because LVGL UI has not been init.");
+        vTaskDelay(pdMS_TO_TICKS(UPDATE_GUI_VAR_TASK_DELAY_MS));
+    }
+}
 
-static void guiTask(void *pvParameter) {
+
+//TODO: general adc read - clean up to only use timer read
+static void adc_read_task(void *pvParameter) {
+    while (1) {
+        if (false==adc_log_readings_flag_b) {
+        // Read ADC values
+            uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
+            uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
+            set_display_adcBatCurrent_mA_ui16(adc_batteryCurrent_mA_ui16);
+            set_display_adcBatVolt_mV_ui16(adc_batteryVoltage_mV_ui16);
+            set_display_batRes_f32(res.internalResistance_f32);
+            set_display_batOcv_f32(res.OCV_f32);
+        }
+        // }
+        
+        // Check and print the stack high water mark
+        // UBaseType_t stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
+        // ESP_LOGD(TAG, "ADC Read Task - Stack high water mark: %d\n", stack_high_water_mark);
+
+        // Delay for the specified interval
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
+void gpio_toggle_soh_timer_callback(void *arg) {
+    periodicTimerType *periodic_timer = (periodicTimerType *)arg;
+    if (NULL == periodic_timer) {
+        ESP_LOGE("PERIODIC_TIMER", "Args for SOH timer callback are NULL");
+        return;
+    }
+
+    // Toggle GPIO pin
+    int pin_state = gpio_get_level(GPIO_SWITCH_BATTERY_DISCHARGE_OUT);
+    gpio_set_battery_discharge_switch(!pin_state, false);
+
+    // Increment the toggle count
+    (periodic_timer->toggle_count_ui16)++;
+
+    ESP_LOGD("PERIODIC_TIMER", "GPIO toggled. Count: %d", periodic_timer->toggle_count_ui16);
+
+    // Check if we reached the maximum number of toggles
+    if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
+        ESP_LOGI("PERIODIC_TIMER", "Maximum toggles reached. Deleting timer.");
+
+        ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
+    }
+}
+
+static void adc_periodic_timer_callback(void *arg) {
+    periodicTimerType *periodic_timer = (periodicTimerType *)arg;
+    if (NULL == periodic_timer) {
+        ESP_LOGE("PERIODIC_TIMER", "Args for SOH timer callback are NULL");
+        return;
+    }
+    uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
+    uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
+    adc_buffer_bat_volt_mV_aui16[periodic_timer->toggle_count_ui16] = adc_batteryVoltage_mV_ui16;
+    adc_buffer_bat_cur_mA_aui16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_ui16;
+    adc_buffer_timestamp_ms_aui16[periodic_timer->toggle_count_ui16] = get_timer_value_ms();
+    periodic_timer->toggle_count_ui16 += 1;
+    if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
+        adc_log_readings_flag_b = false;
+        ESP_LOGD(TAG, "ADC Buffer:");
+        for (uint16_t i = 0; i < periodic_timer->max_toggles_ui16; i++) {
+            ESP_LOGD(TAG, "Volt = %u mV, Current = %u mA, Time = %u ms", adc_buffer_bat_volt_mV_aui16[i],
+                adc_buffer_bat_cur_mA_aui16[i], adc_buffer_timestamp_ms_aui16[i]);
+        }
+        stop_timer();
+        res = soh_LeastSquares(adc_buffer_bat_volt_mV_aui16, adc_buffer_bat_cur_mA_aui16, periodic_timer->max_toggles_ui16, false);
+        set_display_batRes_f32(res.internalResistance_f32);
+        set_display_batOcv_f32(res.OCV_f32);
+        heap_caps_free(adc_buffer_bat_volt_mV_aui16);
+        heap_caps_free(adc_buffer_bat_cur_mA_aui16);
+        heap_caps_free(adc_buffer_timestamp_ms_aui16);
+        ESP_LOGI(TAG, "Freed allocated memory for SOH Measurement");
+        ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
+        adc_log_readings_flag_b = false;
+        set_UI_sohMeasurementStatus_e(UI_NO_MEASUREMENT);
+    }
+}
+
+static void start_soh_measurement() {
+    const soh_configDataType * sohConfigData_s = get_all_sohConfigData_ps();
+
+    /* Allocate memory for logging specified number of samples */
+    uint16_t numSamples_ui16 = (sohConfigData_s->numDischarges_ui8 * sohConfigData_s->dischargePeriod_ms_ui16 * sohConfigData_s->sampleRate_hz_ui16) / 1000;
+    uint16_t size_ui16 = numSamples_ui16 * sizeof(uint16_t);
+    adc_buffer_bat_volt_mV_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
+    adc_buffer_bat_cur_mA_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
+    adc_buffer_timestamp_ms_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
+    ESP_LOGI(TAG, "Allocated %u Bytes of memory for SOH Measurment", size_ui16*3);
+
+    /* Create timer for toggling battery discharge switch - timer is deleted in callback function once finished */
+    periodicTimerType soh_periodic_timer = {
+        .timer_handle = NULL,
+        .timer_interval_us_ui64 = (sohConfigData_s->dischargePeriod_ms_ui16 * 1000)/2,
+        .timer_name = "soh_periodic_timer",
+        .timer_type = TYPE_TOGGLE,
+        .user_callback = &gpio_toggle_soh_timer_callback,
+        .max_toggles_ui16 = (sohConfigData_s->numDischarges_ui8)*2, 
+        .toggle_count_ui16 = 0
+    };
+    ESP_ERROR_CHECK(create_periodic_timer(&soh_periodic_timer));
+
+    /* Create timer for logging adc values at specific interval */
+    periodicTimerType adc_logging_timer = {
+        .timer_handle = NULL,
+        .timer_interval_us_ui64 = (1000000/sohConfigData_s->sampleRate_hz_ui16),
+        .timer_name = "adc_logging_timer",
+        .timer_type = TYPE_NORMAL,
+        .user_callback = &adc_periodic_timer_callback,
+        .max_toggles_ui16 = numSamples_ui16, 
+        .toggle_count_ui16 = 0
+    };
+    ESP_ERROR_CHECK(create_periodic_timer(&adc_logging_timer));
+
+    /* start timer for timestamps for adc logging*/
+    start_timer(); /*TODO: remove this - isnt needed */
+    adc_log_readings_flag_b = true;
+}
+
+
+/* Task to handle controller functionality based on user input form GUI */
+static void gui_to_controller_task(void *pvParameter) {
+    while (1) {
+        const ui_eventDataType* gui_eventData_ps = get_all_UI_eventData_ps();
+        
+        if (gui_eventData_ps->sohMeasurementStatus_e == UI_START_MEASUREMENT) {
+            set_UI_sohMeasurementStatus_e(UI_MEASUREMENT_IN_PROGRESS);
+            start_soh_measurement();
+        }
+        /* Just start discharging ONLY if we are not starting SOH Measurement */
+        else if (gui_eventData_ps->dischargeBattSwitch_e == UI_SWITCH_ON) {
+            gpio_set_battery_discharge_switch(GPIO_HIGH, false);
+        }
+        else if (gui_eventData_ps->dischargeBattSwitch_e == UI_SWITCH_OFF) {
+            gpio_set_battery_discharge_switch(GPIO_LOW, false);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(GUI_TO_CONTROLLER_TASK_DELAY_MS));
+    }
+}
+
+static void lv_gui_main_task(void *pvParameter) {
 
     (void) pvParameter;
     xGuiSemaphore = xSemaphoreCreateMutex();
@@ -133,18 +315,17 @@ static void guiTask(void *pvParameter) {
     ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
     ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, LV_TICK_PERIOD_MS * 1000));
 
-    /* Create the demo application */
-    create_demo_application();
-
+    /* init the ui */
+    ui_init();
+    lvgl_ui_is_init = true;
     while (1) {
-        /* Delay 1 tick (assumes FreeRTOS tick is 10ms */
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(GUI_TASK_DELAY_MS));
 
         /* Try to take the semaphore, call lvgl related function on success */
         if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
             lv_task_handler();
             xSemaphoreGive(xGuiSemaphore);
-       }
+        }
     }
 
     /* A task should NEVER return */
@@ -154,39 +335,6 @@ static void guiTask(void *pvParameter) {
 #endif
     vTaskDelete(NULL);
 }
-
-static void btn_event_cb(lv_obj_t * btn, lv_event_t event)
-{
-    if(event == LV_EVENT_CLICKED) {
-        static uint8_t cnt = 0;
-        cnt++;
-
-        /*Get the first child of the button which is the label and change its text*/
-        lv_obj_t * label = lv_obj_get_child(btn, NULL);
-        lv_label_set_text_fmt(label, "Button: %d", cnt);
-    }
-}
-
-/**
- * Create a button with a label and react on Click event.
- */
-void lv_ex_get_started_1(void)
-{
-    lv_obj_t * btn = lv_btn_create(lv_scr_act(), NULL);     /*Add a button the current screen*/
-    lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
-    lv_obj_set_size(btn, 120, 50);                          /*Set its size*/
-    lv_obj_set_event_cb(btn, btn_event_cb);                 /*Assign a callback to the button*/
-
-    lv_obj_t * label = lv_label_create(btn, NULL);          /*Add a label to the button*/
-    lv_label_set_text(label, "Button");                     /*Set the labels text*/
-}
-
-static void create_demo_application(void)
-{
-    lv_ex_get_started_1();
-}
-
-
 
 static void lv_tick_task(void *arg) {
     (void) arg;
