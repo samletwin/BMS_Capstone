@@ -1,9 +1,9 @@
 dependencies:
-  espressif__esp-dsp:
-    component_hash: null
+  espressif/esp-dsp:
+    component_hash: 3e7bbd487f1357a1d4944d0c85966d049501ea281b8a4c7f93f7cfedd5b7f23d
     source:
-      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\espressif__esp-dsp
-      type: local
+      service_url: https://api.components.espressif.com/
+      type: service
     version: 1.4.12
   idf:
     component_hash: null
@@ -13,15 +13,15 @@ dependencies:
   lvgl__lvgl:
     component_hash: null
     source:
-      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl
+      path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl
       type: local
     version: 7.11.0
   lvgl__lvgl_esp32_drivers:
     component_hash: null
     source:
-      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
+      path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
       type: local
     version: 0.0.3
-manifest_hash: 0e695c7e688638a6cd335c2b668e9f63731021b5c2a1e8b7fecab38c2e3ddcc9
+manifest_hash: 0b43f985eee9cd545f88c556e2da8b6a6625f3b41779a27f03acd6bd1eb57d29
 target: esp32c3
 version: 1.0.0

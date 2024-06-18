@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
     uint8_t socPerc_ui8;
@@ -81,6 +84,8 @@ float get_display_batRes_f32(void);
 uint8_t get_display_sohPerc_ui8(void);
 uint8_t get_display_socPerc_ui8(void);
 
-
+#ifdef __cplusplus
+}
+#endif 
 
 #endif /* GLOBAL_VARS_H */

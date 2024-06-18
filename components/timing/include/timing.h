@@ -6,6 +6,11 @@
 #include "driver/timer.h"
 #include "esp_timer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 // Define a type for the callback function
 typedef void (*timer_callback_t)(void* arg);
 
@@ -35,13 +40,15 @@ typedef struct {
 } periodicTimerType;
 
 
-
-
-
 void timer_initialize();
 void start_timer();
 void stop_timer();
 uint16_t get_timer_value_ms();
 esp_err_t create_periodic_timer(periodicTimerType* periodic_timer_ps);
 esp_err_t delete_periodic_timer(periodicTimerType* periodic_timer_ps);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* TIMING_H */

@@ -6,6 +6,10 @@
 // Define GPIO pins to be used
 #define GPIO_SWITCH_BATTERY_DISCHARGE_OUT GPIO_NUM_5
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     GPIO_LOW = 0,
     GPIO_HIGH = 1
@@ -13,7 +17,12 @@ typedef enum {
 
 // Function prototypes
 void gpio_init(void);
+gpioLevelType gpio_invert_level(gpioLevelType level);
 void gpio_set_battery_discharge_switch(gpioLevelType level, bool debug);
-void gpio_toggle_soh_timer_callback(void *arg);
+void gpio_toggle_discharge_switch(bool debug);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // GPIO_H

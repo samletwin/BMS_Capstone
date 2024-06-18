@@ -68,7 +68,7 @@ static bool adc_log_readings_flag_b = false;
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
  --------------------------------------------------------------------------------------- */
-void app_main() {
+extern "C" void app_main() {
     /* INIT */
     adc_init();
     gpio_init();
@@ -129,8 +129,7 @@ void gpio_toggle_soh_timer_callback(void *arg) {
     }
 
     // Toggle GPIO pin
-    int pin_state = gpio_get_level(GPIO_SWITCH_BATTERY_DISCHARGE_OUT);
-    gpio_set_battery_discharge_switch(!pin_state, false);
+    gpio_toggle_discharge_switch(false);
 
     // Increment the toggle count
     (periodic_timer->toggle_count_ui16)++;
@@ -192,24 +191,24 @@ static void start_soh_measurement() {
     /* Create timer for toggling battery discharge switch - timer is deleted in callback function once finished */
     periodicTimerType soh_periodic_timer = {
         .timer_handle = NULL,
-        .timer_interval_us_ui64 = (sohConfigData_s->dischargePeriod_ms_ui16 * 1000)/2,
+        .user_callback = &gpio_toggle_soh_timer_callback,
         .timer_name = "soh_periodic_timer",
         .timer_type = TYPE_TOGGLE,
-        .user_callback = &gpio_toggle_soh_timer_callback,
-        .max_toggles_ui16 = (sohConfigData_s->numDischarges_ui8)*2, 
-        .toggle_count_ui16 = 0
+        .timer_interval_us_ui64 = (uint64_t)(sohConfigData_s->dischargePeriod_ms_ui16 * 1000)/2,
+        .toggle_count_ui16 = 0,
+        .max_toggles_ui16 = (uint16_t)(sohConfigData_s->numDischarges_ui8*2),
     };
     ESP_ERROR_CHECK(create_periodic_timer(&soh_periodic_timer));
 
     /* Create timer for logging adc values at specific interval */
     periodicTimerType adc_logging_timer = {
         .timer_handle = NULL,
-        .timer_interval_us_ui64 = (1000000/sohConfigData_s->sampleRate_hz_ui16),
+        .user_callback = &adc_periodic_timer_callback,
         .timer_name = "adc_logging_timer",
         .timer_type = TYPE_NORMAL,
-        .user_callback = &adc_periodic_timer_callback,
-        .max_toggles_ui16 = numSamples_ui16, 
-        .toggle_count_ui16 = 0
+        .timer_interval_us_ui64 = (uint64_t)(1000000/sohConfigData_s->sampleRate_hz_ui16),
+        .toggle_count_ui16 = 0,
+        .max_toggles_ui16 = numSamples_ui16 
     };
     ESP_ERROR_CHECK(create_periodic_timer(&adc_logging_timer));
 
@@ -250,12 +249,12 @@ static void lv_gui_main_task(void *pvParameter) {
     /* Initialize SPI or I2C bus used by the drivers */
     lvgl_driver_init();
 
-    lv_color_t* buf1 = heap_caps_malloc(DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    lv_color_t* buf1 = (lv_color_t*)heap_caps_malloc(DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf1 != NULL);
 
     /* Use double buffered when not working with monochrome displays */
 #ifndef CONFIG_LV_TFT_DISPLAY_MONOCHROME
-    lv_color_t* buf2 = heap_caps_malloc(DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    lv_color_t* buf2 = (lv_color_t*)heap_caps_malloc(DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf2 != NULL);
 #else
     static lv_color_t *buf2 = NULL;
