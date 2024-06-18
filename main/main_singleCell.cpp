@@ -1,13 +1,6 @@
-/* LVGL Example project
- *
- * Basic project to test LVGL on ESP32 based projects.
- *
- * This example code is in the Public Domain (or CC0 licensed, at your option.)
- *
- * Unless required by applicable law or agreed to in writing, this
- * software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied.
- */
+#include "main_cfg.h"
+
+#ifdef MAIN_SINGLE_CELL
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +30,6 @@
 #include "soh.h"
 #include "timing.h"
 
-#include "main_cfg.h"
 
 /*********************
  *      DEFINES
@@ -62,7 +54,6 @@ static uint16_t * adc_buffer_bat_cur_mA_aui16;
 static uint16_t * adc_buffer_timestamp_ms_aui16;
 static bool lvgl_ui_is_init = false;
 static soh_result res = (soh_result){0};
-
 static bool adc_log_readings_flag_b = false;
 
 /* ---------------------------------------------------------------------------------------
@@ -340,3 +331,4 @@ static void lv_tick_task(void *arg) {
 
     lv_tick_inc(LV_TICK_PERIOD_MS);
 }
+#endif /* MAIN_SINGLE_CELL */

@@ -1,6 +1,9 @@
 #ifndef MAIN_CFG_H
 #define MAIN_CFG_H
 
+#define MAIN_SINGLE_CELL
+// #define MAIN_DALY_BMS
+
 #define LV_TICK_PERIOD_MS 1
 #define GUI_TO_CONTROLLER_TASK_DELAY_MS 100
 #define GUI_TASK_DELAY_MS 10
