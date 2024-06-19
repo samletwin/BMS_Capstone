@@ -28,25 +28,25 @@ void adc_init(void) {
 }
 
 // Function to read battery voltage
-uint16_t adc_readBattVoltage_mV(bool debug) {
+uint16_t adc_readBattVoltage_mV_ui16(bool debug) {
     if (!adc_is_init)
         ESP_LOGE(TAG, "Attempting to read ADC when it is not init!");
-    uint32_t adc_reading = adc1_get_raw(ADC_BATT_VOLTAGE_PIN);
-    uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
+    uint16_t adc_reading = adc1_get_raw(ADC_BATT_VOLTAGE_PIN);
+    uint16_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
+    uint16_t scaled_voltage = voltage * ADC_BATT_VOLTAGE_SCALE;
     if (true == debug)
-        ESP_LOGD(TAG, "Batt Voltage Reading - Raw: %d\tVoltage: %dmV", adc_reading, voltage);
-    voltage = voltage * ADC_BATT_VOLTAGE_SCALE;
-    return (uint16_t)voltage;
+        ESP_LOGD(TAG, "Batt Voltage Reading - Raw Voltage: %dmV, Calibrated Voltage: %dmV, Final Scaled Voltage: %dmV", adc_reading, voltage, scaled_voltage);
+    return scaled_voltage;
 }
 
 // Function to read battery current
-uint16_t adc_readBattCurrent_mA(bool debug) {
+int16_t adc_readBattCurrent_mA_si16(bool debug) {
     if (!adc_is_init)
         ESP_LOGE(TAG, "Attempting to read ADC when it is not init!");
-    uint32_t adc_reading = adc1_get_raw(ADC_BATT_CURRENT_PIN);
-    uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
+    uint16_t adc_reading = adc1_get_raw(ADC_BATT_CURRENT_PIN);
+    uint16_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
+    int16_t scaled_current = (voltage - ADC_CURRENT_VREF_OFFSET_MV) * ADC_CURRENT_SCALE;
     if (true == debug) 
-        ESP_LOGD(TAG, "Batt Current Reading - Raw: %dVoltage: %dmV", adc_reading, voltage);
-    voltage = voltage * ADC_CURRENT_SCALE;
-    return (uint16_t)voltage;
+        ESP_LOGD(TAG, "Batt Current Reading - Raw Voltage: %dmV, Calibrated Voltage: %dmV, Final Scaled Current: %dmA", adc_reading, voltage, scaled_current);
+    return scaled_current;
 }

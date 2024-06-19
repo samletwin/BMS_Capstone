@@ -11,4 +11,6 @@
 #define GUI_TASK_DELAY_MS 10
 #define UPDATE_GUI_VAR_TASK_DELAY_MS 2000
 
+#define PRINT_ADC_READINGS_TO_SERIAL true
+
 #endif /* MAIN_CFG_H */

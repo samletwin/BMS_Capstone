@@ -325,7 +325,7 @@ void tick_screen_main_single_cell() {
     update_label_f(objects.lbl_bat_ocv_variable, "%f mV", tick_data->batOcv_f32);
     update_label_i(objects.lbl_bat_tts_variable, "%u sec", tick_data->batTts_ui32);
     update_label_i(objects.lbl_bat_volt_variable, "%u mV", tick_data->adcBatVolt_mV_ui16);
-    update_label_i(objects.lbl_bat_current_variable, "%u mA", tick_data->adcBatCurrent_mA_ui16);
+    update_label_i(objects.lbl_bat_current_variable, "%u mA", tick_data->adcBatCurrent_mA_si16);
     // ESP_LOGD("SCREENS","tick data: %f", tick_data->batRes_f32);
 
 }

@@ -10,7 +10,9 @@
 #define R1 9970
 #define R2 19890
 #define ADC_BATT_VOLTAGE_SCALE (R1+R2)/R2
+
 #define ADC_CURRENT_SCALE (1000/400) /* 400mV/A scaling - divide by 400 to get A, multiply by 1000 to get mA*/
+#define ADC_CURRENT_VREF_OFFSET_MV 2500
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,8 +20,8 @@ extern "C" {
 
 // Function prototypes
 void adc_init(void);
-uint16_t adc_readBattVoltage_mV(bool debug);
-uint16_t adc_readBattCurrent_mA(bool debug);
+uint16_t adc_readBattVoltage_mV_ui16(bool debug);
+int16_t adc_readBattCurrent_mA_si16(bool debug);
 
 #ifdef __cplusplus
 }
