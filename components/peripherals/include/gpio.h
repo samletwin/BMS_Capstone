@@ -19,7 +19,13 @@ typedef enum {
 void gpio_init(void);
 gpioLevelType gpio_invert_level(gpioLevelType level);
 void gpio_set_battery_discharge_switch(gpioLevelType level, bool debug);
-void gpio_toggle_discharge_switch(bool debug);
+/**
+ * @brief 
+ * 
+ * @param debug 
+ * @return gpioLevelType Level switch is set to (HIGH/LOW)
+ */
+gpioLevelType gpio_toggle_discharge_switch(bool debug);
 
 #ifdef __cplusplus
 }

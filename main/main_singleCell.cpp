@@ -50,11 +50,12 @@ static void start_soh_measurement();
 
 static SemaphoreHandle_t xGuiSemaphore;
 static uint16_t * adc_buffer_bat_volt_mV_aui16;
-static uint16_t * adc_buffer_bat_cur_mA_aui16;
+static sint16_t * adc_buffer_bat_cur_mA_asi16;
 static uint16_t * adc_buffer_timestamp_ms_aui16;
 static bool lvgl_ui_is_init = false;
 static soh_result res = (soh_result){0};
 static bool adc_log_readings_flag_b = false;
+static battery_stateType batteryState_e;
 
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
@@ -120,7 +121,11 @@ void gpio_toggle_soh_timer_callback(void *arg) {
     }
 
     // Toggle GPIO pin
-    gpio_toggle_discharge_switch(false);
+    gpioLevelType level = gpio_toggle_discharge_switch(false);
+    if (GPIO_HIGH == level) 
+        batteryState_e = BATTERY_STATE_DISCHARGING;
+    else
+        batteryState_e = BATTERY_STATE_NO_CURRENT;
 
     // Increment the toggle count
     (periodic_timer->toggle_count_ui16)++;
@@ -141,10 +146,13 @@ static void adc_periodic_timer_callback(void *arg) {
         ESP_LOGE("PERIODIC_TIMER", "Args for SOH timer callback are NULL");
         return;
     }
+    /* Read ADC */
     uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
     uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
+
+    /* Update current to be negative if */
     adc_buffer_bat_volt_mV_aui16[periodic_timer->toggle_count_ui16] = adc_batteryVoltage_mV_ui16;
-    adc_buffer_bat_cur_mA_aui16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_ui16;
+    adc_buffer_bat_cur_mA_asi16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_ui16;
     adc_buffer_timestamp_ms_aui16[periodic_timer->toggle_count_ui16] = get_timer_value_ms();
     periodic_timer->toggle_count_ui16 += 1;
     if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
@@ -152,14 +160,14 @@ static void adc_periodic_timer_callback(void *arg) {
         ESP_LOGD(TAG, "ADC Buffer:");
         for (uint16_t i = 0; i < periodic_timer->max_toggles_ui16; i++) {
             ESP_LOGD(TAG, "Volt = %u mV, Current = %u mA, Time = %u ms", adc_buffer_bat_volt_mV_aui16[i],
-                adc_buffer_bat_cur_mA_aui16[i], adc_buffer_timestamp_ms_aui16[i]);
+                adc_buffer_bat_cur_mA_asi16[i], adc_buffer_timestamp_ms_aui16[i]);
         }
         stop_timer();
-        res = soh_LeastSquares(adc_buffer_bat_volt_mV_aui16, adc_buffer_bat_cur_mA_aui16, periodic_timer->max_toggles_ui16, false);
+        res = soh_LeastSquares(adc_buffer_bat_volt_mV_aui16, adc_buffer_bat_cur_mA_asi16, periodic_timer->max_toggles_ui16, false);
         set_display_batRes_f32(res.internalResistance_f32);
         set_display_batOcv_f32(res.OCV_f32);
         heap_caps_free(adc_buffer_bat_volt_mV_aui16);
-        heap_caps_free(adc_buffer_bat_cur_mA_aui16);
+        heap_caps_free(adc_buffer_bat_cur_mA_asi16);
         heap_caps_free(adc_buffer_timestamp_ms_aui16);
         ESP_LOGI(TAG, "Freed allocated memory for SOH Measurement");
         ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
@@ -175,7 +183,7 @@ static void start_soh_measurement() {
     uint16_t numSamples_ui16 = (sohConfigData_s->numDischarges_ui8 * sohConfigData_s->dischargePeriod_ms_ui16 * sohConfigData_s->sampleRate_hz_ui16) / 1000;
     uint16_t size_ui16 = numSamples_ui16 * sizeof(uint16_t);
     adc_buffer_bat_volt_mV_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
-    adc_buffer_bat_cur_mA_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
+    adc_buffer_bat_cur_mA_asi16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
     adc_buffer_timestamp_ms_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
     ESP_LOGI(TAG, "Allocated %u Bytes of memory for SOH Measurment", size_ui16*3);
 

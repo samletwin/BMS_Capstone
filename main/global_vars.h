@@ -29,6 +29,12 @@ typedef enum {
 } ui_switchStatusType;
 
 typedef enum {
+    BATTERY_STATE_NO_CURRENT = 0,
+    BATTERY_STATE_DISCHARGING = 1,
+    BATTERY_STATE_CHARGING = 2
+} battery_stateType;
+
+typedef enum {
     UI_NO_MEASUREMENT = 0,
     UI_START_MEASUREMENT = 1,
     UI_MEASUREMENT_IN_PROGRESS = 2

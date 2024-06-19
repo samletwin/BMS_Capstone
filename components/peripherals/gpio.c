@@ -40,13 +40,14 @@ void gpio_set_battery_discharge_switch(gpioLevelType level, bool debug) {
         ESP_LOGD(TAG, "Set battery discharge switch output to %d", level);
 }
 
-void gpio_toggle_discharge_switch(bool debug) {
+gpioLevelType gpio_toggle_discharge_switch(bool debug) {
     gpio_checkInit();
     gpioLevelType level = gpio_get_level(GPIO_SWITCH_BATTERY_DISCHARGE_OUT);
     level = gpio_invert_level(level);
     ESP_ERROR_CHECK(gpio_set_level(GPIO_SWITCH_BATTERY_DISCHARGE_OUT, (uint32_t)level));
     if (true == debug)
         ESP_LOGD(TAG, "Set battery discharge switch output to %d", level);
+    return level;
 }
 
 

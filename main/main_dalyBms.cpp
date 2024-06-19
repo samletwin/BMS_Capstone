@@ -29,7 +29,7 @@
 #include "gpio.h"
 #include "soh.h"
 #include "timing.h"
-
+#include "daly_bms_serial.h"
 
 /*********************
  *      DEFINES
@@ -41,7 +41,7 @@
  *  STATIC PROTOTYPES
  **********************/
 static void lv_tick_task(void *arg);
-static void adc_read_task(void *pvParameter);
+static void daly_bms_task(void *pvParameter);
 static void gui_to_controller_task(void *pvParameter);
 static void lv_gui_main_task(void *pvParameter);
 static void lv_gui_update_variables_task(void *pvParameter);
@@ -49,12 +49,8 @@ static void lv_gui_update_variables_task(void *pvParameter);
 static void start_soh_measurement();
 
 static SemaphoreHandle_t xGuiSemaphore;
-static uint16_t * adc_buffer_bat_volt_mV_aui16;
-static uint16_t * adc_buffer_bat_cur_mA_aui16;
-static uint16_t * adc_buffer_timestamp_ms_aui16;
 static bool lvgl_ui_is_init = false;
-static soh_result res = (soh_result){0};
-static bool adc_log_readings_flag_b = false;
+static Daly_BMS_UART bms;
 
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
@@ -64,12 +60,16 @@ extern "C" void app_main() {
     adc_init();
     gpio_init();
     timer_initialize();
+    bms = Daly_BMS_UART();
+
+    if (true != bms.Init())
+        ESP_LOGE(TAG, "Error initializing daly BMS");
+
     /* If you want to use a task to create the graphic, you NEED to create a Pinned task
      * Otherwise there can be problem such as memory corruption and so on.
      * NOTE: When not using Wi-Fi nor Bluetooth you can pin the lv_gui_main_task to core 0 */
     xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
-    
-    xTaskCreate(adc_read_task, "ADC Read Task", 4096, NULL, 1, NULL);
+    xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
     xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
     xTaskCreate(gui_to_controller_task, "gui to controller task", 2048, NULL, 1, NULL);
 }
@@ -89,26 +89,13 @@ static void lv_gui_update_variables_task(void *pvParameter) {
 }
 
 
-//TODO: general adc read - clean up to only use timer read
-static void adc_read_task(void *pvParameter) {
+// daly bms update task
+static void daly_bms_task(void *pvParameter) {
     while (1) {
-        if (false==adc_log_readings_flag_b) {
-        // Read ADC values
-            uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
-            uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
-            set_display_adcBatCurrent_mA_ui16(adc_batteryCurrent_mA_ui16);
-            set_display_adcBatVolt_mV_ui16(adc_batteryVoltage_mV_ui16);
-            set_display_batRes_f32(res.internalResistance_f32);
-            set_display_batOcv_f32(res.OCV_f32);
-        }
-        // }
-        
-        // Check and print the stack high water mark
-        // UBaseType_t stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
-        // ESP_LOGD(TAG, "ADC Read Task - Stack high water mark: %d\n", stack_high_water_mark);
-
-        // Delay for the specified interval
-        vTaskDelay(pdMS_TO_TICKS(10));
+        bms.update();
+        bms.printBmsStats();
+        bms.printBmsAlarms();
+        vTaskDelay(pdMS_TO_TICKS(DALY_BMS_UPDATE_TASK_DELAY_MS));
     }
 }
 
@@ -134,80 +121,6 @@ void gpio_toggle_soh_timer_callback(void *arg) {
         ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
     }
 }
-
-static void adc_periodic_timer_callback(void *arg) {
-    periodicTimerType *periodic_timer = (periodicTimerType *)arg;
-    if (NULL == periodic_timer) {
-        ESP_LOGE("PERIODIC_TIMER", "Args for SOH timer callback are NULL");
-        return;
-    }
-    uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
-    uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
-    adc_buffer_bat_volt_mV_aui16[periodic_timer->toggle_count_ui16] = adc_batteryVoltage_mV_ui16;
-    adc_buffer_bat_cur_mA_aui16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_ui16;
-    adc_buffer_timestamp_ms_aui16[periodic_timer->toggle_count_ui16] = get_timer_value_ms();
-    periodic_timer->toggle_count_ui16 += 1;
-    if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
-        adc_log_readings_flag_b = false;
-        ESP_LOGD(TAG, "ADC Buffer:");
-        for (uint16_t i = 0; i < periodic_timer->max_toggles_ui16; i++) {
-            ESP_LOGD(TAG, "Volt = %u mV, Current = %u mA, Time = %u ms", adc_buffer_bat_volt_mV_aui16[i],
-                adc_buffer_bat_cur_mA_aui16[i], adc_buffer_timestamp_ms_aui16[i]);
-        }
-        stop_timer();
-        res = soh_LeastSquares(adc_buffer_bat_volt_mV_aui16, adc_buffer_bat_cur_mA_aui16, periodic_timer->max_toggles_ui16, false);
-        set_display_batRes_f32(res.internalResistance_f32);
-        set_display_batOcv_f32(res.OCV_f32);
-        heap_caps_free(adc_buffer_bat_volt_mV_aui16);
-        heap_caps_free(adc_buffer_bat_cur_mA_aui16);
-        heap_caps_free(adc_buffer_timestamp_ms_aui16);
-        ESP_LOGI(TAG, "Freed allocated memory for SOH Measurement");
-        ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
-        adc_log_readings_flag_b = false;
-        set_UI_sohMeasurementStatus_e(UI_NO_MEASUREMENT);
-    }
-}
-
-static void start_soh_measurement() {
-    const soh_configDataType * sohConfigData_s = get_all_sohConfigData_ps();
-
-    /* Allocate memory for logging specified number of samples */
-    uint16_t numSamples_ui16 = (sohConfigData_s->numDischarges_ui8 * sohConfigData_s->dischargePeriod_ms_ui16 * sohConfigData_s->sampleRate_hz_ui16) / 1000;
-    uint16_t size_ui16 = numSamples_ui16 * sizeof(uint16_t);
-    adc_buffer_bat_volt_mV_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
-    adc_buffer_bat_cur_mA_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
-    adc_buffer_timestamp_ms_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
-    ESP_LOGI(TAG, "Allocated %u Bytes of memory for SOH Measurment", size_ui16*3);
-
-    /* Create timer for toggling battery discharge switch - timer is deleted in callback function once finished */
-    periodicTimerType soh_periodic_timer = {
-        .timer_handle = NULL,
-        .user_callback = &gpio_toggle_soh_timer_callback,
-        .timer_name = "soh_periodic_timer",
-        .timer_type = TYPE_TOGGLE,
-        .timer_interval_us_ui64 = (uint64_t)(sohConfigData_s->dischargePeriod_ms_ui16 * 1000)/2,
-        .toggle_count_ui16 = 0,
-        .max_toggles_ui16 = (uint16_t)(sohConfigData_s->numDischarges_ui8*2),
-    };
-    ESP_ERROR_CHECK(create_periodic_timer(&soh_periodic_timer));
-
-    /* Create timer for logging adc values at specific interval */
-    periodicTimerType adc_logging_timer = {
-        .timer_handle = NULL,
-        .user_callback = &adc_periodic_timer_callback,
-        .timer_name = "adc_logging_timer",
-        .timer_type = TYPE_NORMAL,
-        .timer_interval_us_ui64 = (uint64_t)(1000000/sohConfigData_s->sampleRate_hz_ui16),
-        .toggle_count_ui16 = 0,
-        .max_toggles_ui16 = numSamples_ui16 
-    };
-    ESP_ERROR_CHECK(create_periodic_timer(&adc_logging_timer));
-
-    /* start timer for timestamps for adc logging*/
-    start_timer(); /*TODO: remove this - isnt needed */
-    adc_log_readings_flag_b = true;
-}
-
 
 /* Task to handle controller functionality based on user input form GUI */
 static void gui_to_controller_task(void *pvParameter) {

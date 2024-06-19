@@ -1,5 +1,5 @@
-#ifndef ADC_READ_H
-#define ADC_READ_H
+#ifndef ADC_H
+#define ADC_H
 
 #include "driver/adc.h"
 
@@ -25,4 +25,4 @@ uint16_t adc_readBattCurrent_mA(bool debug);
 }
 #endif
 
-#endif // ADC_READ_H
+#endif // ADC_H
