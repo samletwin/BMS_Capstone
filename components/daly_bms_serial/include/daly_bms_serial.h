@@ -168,7 +168,12 @@ public:
     /**
      * @brief Updating the Data from the BMS
      */
-    bool update();
+    bool updateAll();
+
+     /**
+     * @brief Updating cell data only from BMS
+     */
+    bool updateSpecific();
 
     /**
      * @brief Print the get struct
