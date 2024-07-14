@@ -14,7 +14,7 @@ typedef struct {
     float batOcv_f32;
     uint32_t batTts_ui32;
     uint16_t adcBatVolt_mV_ui16;
-    uint16_t adcBatCurrent_mA_ui16;
+    int16_t adcBatCurrent_mA_si16;
 } ui_displayDataType;
 
 typedef struct {
@@ -58,7 +58,7 @@ void set_UI_sohMeasurementStatus_e(ui_startMeasurementType val);
 void set_UI_dischargeBattSwitch_e(ui_switchStatusType val);
 
 /* Display Data */
-void set_display_adcBatCurrent_mA_ui16(uint16_t val);
+void set_display_adcBatCurrent_mA_si16(int16_t val);
 void set_display_adcBatVolt_mV_ui16(uint16_t val);
 void set_display_batTts_ui32(uint32_t val);
 void set_display_batOcv_f32(float val);
@@ -82,7 +82,7 @@ ui_switchStatusType get_UI_dischargeBattSwitch_e(void);
 
 /* Display Data */
 const ui_displayDataType* get_all_UI_displayData_ps(void);
-uint16_t get_display_adcBatCurrent_mA_ui16(void);
+int16_t get_display_adcBatCurrent_mA_si16(void);
 uint16_t get_display_adcBatVolt_mV_ui16(void);
 uint32_t get_display_batTts_ui32(void);
 float get_display_batOcv_f32(void);

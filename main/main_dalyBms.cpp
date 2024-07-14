@@ -46,12 +46,9 @@ static void gui_to_controller_task(void *pvParameter);
 static void lv_gui_main_task(void *pvParameter);
 static void lv_gui_update_variables_task(void *pvParameter);
 
-static void start_soh_measurement();
-
 static SemaphoreHandle_t xGuiSemaphore;
 static bool lvgl_ui_is_init = false;
 static Daly_BMS_UART bms;
-
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
  --------------------------------------------------------------------------------------- */
@@ -68,10 +65,10 @@ extern "C" void app_main() {
     /* If you want to use a task to create the graphic, you NEED to create a Pinned task
      * Otherwise there can be problem such as memory corruption and so on.
      * NOTE: When not using Wi-Fi nor Bluetooth you can pin the lv_gui_main_task to core 0 */
-    xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
+    // xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
     xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
-    xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
-    xTaskCreate(gui_to_controller_task, "gui to controller task", 2048, NULL, 1, NULL);
+    // xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
+    // xTaskCreate(gui_to_controller_task, "gui to controller task", 2048, NULL, 1, NULL);
 }
 
 static void lv_gui_update_variables_task(void *pvParameter) {
@@ -92,9 +89,14 @@ static void lv_gui_update_variables_task(void *pvParameter) {
 // daly bms update task
 static void daly_bms_task(void *pvParameter) {
     while (1) {
-        bms.update();
-        bms.printBmsStats();
-        bms.printBmsAlarms();
+        bool retVal = bms.updateSpecific();
+        if (true == retVal) {
+            // bms.printBmsStats();
+            // bms.printBmsAlarms();
+        }
+        else {
+            ESP_LOGE(TAG, "Failed to communicate with DALY BMS");
+        }
         vTaskDelay(pdMS_TO_TICKS(DALY_BMS_UPDATE_TASK_DELAY_MS));
     }
 }
@@ -122,26 +124,6 @@ void gpio_toggle_soh_timer_callback(void *arg) {
     }
 }
 
-/* Task to handle controller functionality based on user input form GUI */
-static void gui_to_controller_task(void *pvParameter) {
-    while (1) {
-        const ui_eventDataType* gui_eventData_ps = get_all_UI_eventData_ps();
-        
-        if (gui_eventData_ps->sohMeasurementStatus_e == UI_START_MEASUREMENT) {
-            set_UI_sohMeasurementStatus_e(UI_MEASUREMENT_IN_PROGRESS);
-            start_soh_measurement();
-        }
-        /* Just start discharging ONLY if we are not starting SOH Measurement */
-        else if (gui_eventData_ps->dischargeBattSwitch_e == UI_SWITCH_ON) {
-            gpio_set_battery_discharge_switch(GPIO_HIGH, false);
-        }
-        else if (gui_eventData_ps->dischargeBattSwitch_e == UI_SWITCH_OFF) {
-            gpio_set_battery_discharge_switch(GPIO_LOW, false);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(GUI_TO_CONTROLLER_TASK_DELAY_MS));
-    }
-}
 
 static void lv_gui_main_task(void *pvParameter) {
 

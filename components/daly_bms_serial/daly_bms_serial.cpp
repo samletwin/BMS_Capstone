@@ -6,8 +6,8 @@
 
 #define UART_PORT_NUM      UART_NUM_1
 #define UART_BAUD_RATE     9600
-#define UART_TX_PIN        1
-#define UART_RX_PIN        3
+#define UART_TX_PIN        17
+#define UART_RX_PIN        16
 #define BUF_SIZE           1024
 
 //----------------------------------------------------------------------
@@ -48,7 +48,7 @@ bool Daly_BMS_UART::Init()
     return true;
 }
 
-bool Daly_BMS_UART::update()
+bool Daly_BMS_UART::updateAll()
 {
     // Call all get___() functions to populate all members of the "get" struct
     if (!getPackMeasurements()) return false; // 0x90
@@ -64,8 +64,22 @@ bool Daly_BMS_UART::update()
     return true;
 }
 
+bool Daly_BMS_UART::updateSpecific()
+{
+    if (!getPackMeasurements()) return false; // 0x90
+    if (!getCellVoltages()) return false; // 0x95
+
+    return true;
+}
+
 void Daly_BMS_UART::printBmsStats()
 {
+    // printf("\n%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%d",
+    // get.packVoltage, get.packCurrent, get.packSOC,
+    // get.cellVmV[0],get.cellVmV[1],get.cellVmV[2],get.cellVmV[3],get.cellVmV[4],get.cellVmV[5],get.cellVmV[6],
+    // get.cellVmV[7],get.cellVmV[8],get.cellVmV[9],get.cellVmV[10],get.cellVmV[11],get.cellVmV[12],get.cellVmV[13],
+    // get.cellTemperature[0]);
+
     ESP_LOGI("BMS_STATS", "Current BMS Stats:");
     ESP_LOGI("BMS_STATS", "Pack Voltage: %.1f V", get.packVoltage);
     ESP_LOGI("BMS_STATS", "Pack Current: %.1f A", get.packCurrent);

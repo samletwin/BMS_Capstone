@@ -32,8 +32,8 @@ void set_UI_dischargeBattSwitch_e(ui_switchStatusType val) {
 }
 
 /* Display Data */
-void set_display_adcBatCurrent_mA_ui16(uint16_t val) {
-    data_s.adcBatCurrent_mA_ui16 = val;
+void set_display_adcBatCurrent_mA_si16(int16_t val) {
+    data_s.adcBatCurrent_mA_si16 = val;
 }
 void set_display_adcBatVolt_mV_ui16(uint16_t val) {
     data_s.adcBatVolt_mV_ui16 = val;
@@ -86,8 +86,8 @@ ui_switchStatusType get_UI_dischargeBattSwitch_e(void) {
 const ui_displayDataType* get_all_UI_displayData_ps(void) {
     return &data_s;
 }
-uint16_t get_display_adcBatCurrent_mA_ui16(void) {
-    return data_s.adcBatCurrent_mA_ui16;
+int16_t get_display_adcBatCurrent_mA_si16(void) {
+    return data_s.adcBatCurrent_mA_si16;
 }
 uint16_t get_display_adcBatVolt_mV_ui16(void) {
     return data_s.adcBatVolt_mV_ui16;

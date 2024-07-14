@@ -105,7 +105,6 @@ static void adc_read_task(void *pvParameter) {
             set_display_batRes_f32(res.internalResistance_f32);
             set_display_batOcv_f32(res.OCV_f32);
         }
-        // }
         
         // Check and print the stack high water mark
         // UBaseType_t stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
@@ -155,7 +154,7 @@ static void adc_periodic_timer_callback(void *arg) {
 
     /* Update current to be negative if */
     adc_buffer_bat_volt_mV_aui16[periodic_timer->toggle_count_ui16] = adc_batteryVoltage_mV_ui16;
-    adc_buffer_bat_cur_mA_asi16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_ui16;
+    adc_buffer_bat_cur_mA_asi16[periodic_timer->toggle_count_ui16] = adc_batteryCurrent_mA_si16;
     adc_buffer_timestamp_ms_aui16[periodic_timer->toggle_count_ui16] = get_timer_value_ms();
     periodic_timer->toggle_count_ui16 += 1;
     if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
