@@ -29,6 +29,7 @@
 #include "gpio.h"
 #include "soh.h"
 #include "timing.h"
+#include "mcp320x_helper.h"
 
 
 /*********************
@@ -50,7 +51,7 @@ static void start_soh_measurement();
 
 static SemaphoreHandle_t xGuiSemaphore;
 static uint16_t * adc_buffer_bat_volt_mV_aui16;
-static sint16_t * adc_buffer_bat_cur_mA_asi16;
+static int16_t * adc_buffer_bat_cur_mA_asi16;
 static uint16_t * adc_buffer_timestamp_ms_aui16;
 static bool lvgl_ui_is_init = false;
 static soh_result res = (soh_result){0};
@@ -62,9 +63,11 @@ static battery_stateType batteryState_e;
  --------------------------------------------------------------------------------------- */
 extern "C" void app_main() {
     /* INIT */
-    adc_init();
+    lvgl_driver_init();
     gpio_init();
     timer_initialize();
+    mcp320x_init();
+
     /* If you want to use a task to create the graphic, you NEED to create a Pinned task
      * Otherwise there can be problem such as memory corruption and so on.
      * NOTE: When not using Wi-Fi nor Bluetooth you can pin the lv_gui_main_task to core 0 */
@@ -95,8 +98,8 @@ static void adc_read_task(void *pvParameter) {
     while (1) {
         if (false==adc_log_readings_flag_b) {
         // Read ADC values
-            uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
-            uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
+            uint16_t adc_batteryVoltage_mV_ui16 = mcp320x_readBattCurrent_analog_mA(true);
+            uint16_t adc_batteryCurrent_mA_ui16 = mcp320x_readBattVoltage_analog_mV(true);
             set_display_adcBatCurrent_mA_ui16(adc_batteryCurrent_mA_ui16);
             set_display_adcBatVolt_mV_ui16(adc_batteryVoltage_mV_ui16);
             set_display_batRes_f32(res.internalResistance_f32);
@@ -109,7 +112,7 @@ static void adc_read_task(void *pvParameter) {
         // ESP_LOGD(TAG, "ADC Read Task - Stack high water mark: %d\n", stack_high_water_mark);
 
         // Delay for the specified interval
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -147,8 +150,8 @@ static void adc_periodic_timer_callback(void *arg) {
         return;
     }
     /* Read ADC */
-    uint16_t adc_batteryVoltage_mV_ui16 = adc_readBattVoltage_mV(false);
-    uint16_t adc_batteryCurrent_mA_ui16 = adc_readBattCurrent_mA(false);
+    uint16_t adc_batteryVoltage_mV_ui16 = 0;
+    uint16_t adc_batteryCurrent_mA_ui16 = 0;
 
     /* Update current to be negative if */
     adc_buffer_bat_volt_mV_aui16[periodic_timer->toggle_count_ui16] = adc_batteryVoltage_mV_ui16;
@@ -163,7 +166,7 @@ static void adc_periodic_timer_callback(void *arg) {
                 adc_buffer_bat_cur_mA_asi16[i], adc_buffer_timestamp_ms_aui16[i]);
         }
         stop_timer();
-        res = soh_LeastSquares(adc_buffer_bat_volt_mV_aui16, adc_buffer_bat_cur_mA_asi16, periodic_timer->max_toggles_ui16, false);
+        res = soh_LeastSquares(adc_buffer_bat_cur_mA_asi16, adc_buffer_bat_volt_mV_aui16, periodic_timer->max_toggles_ui16, false);
         set_display_batRes_f32(res.internalResistance_f32);
         set_display_batOcv_f32(res.OCV_f32);
         heap_caps_free(adc_buffer_bat_volt_mV_aui16);
@@ -183,7 +186,7 @@ static void start_soh_measurement() {
     uint16_t numSamples_ui16 = (sohConfigData_s->numDischarges_ui8 * sohConfigData_s->dischargePeriod_ms_ui16 * sohConfigData_s->sampleRate_hz_ui16) / 1000;
     uint16_t size_ui16 = numSamples_ui16 * sizeof(uint16_t);
     adc_buffer_bat_volt_mV_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
-    adc_buffer_bat_cur_mA_asi16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
+    adc_buffer_bat_cur_mA_asi16 = (int16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
     adc_buffer_timestamp_ms_aui16 = (uint16_t*)heap_caps_malloc(size_ui16, MALLOC_CAP_DMA);
     ESP_LOGI(TAG, "Allocated %u Bytes of memory for SOH Measurment", size_ui16*3);
 
@@ -245,8 +248,6 @@ static void lv_gui_main_task(void *pvParameter) {
 
     lv_init();
 
-    /* Initialize SPI or I2C bus used by the drivers */
-    lvgl_driver_init();
 
     lv_color_t* buf1 = (lv_color_t*)heap_caps_malloc(DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf1 != NULL);

@@ -12,7 +12,7 @@ typedef struct {
     float internalResistance_f32;
 } soh_result;
 
-soh_result soh_LeastSquares(const uint16_t current_mA[], const uint16_t voltage_mV[], uint16_t size, bool debug);
+soh_result soh_LeastSquares(const int16_t current_mA[], const uint16_t voltage_mV[], uint16_t size, bool debug);
 
 #ifdef __cplusplus
 }

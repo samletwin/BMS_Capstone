@@ -11,4 +11,5 @@ list(APPEND SOURCES "global_vars.c")
                 
 idf_component_register(SRCS ${SOURCES}
                         INCLUDE_DIRS ${INCLUDE_DIRS}
-                        REQUIRES lvgl peripherals bms timing daly_bms_serial)
+                        REQUIRES lvgl peripherals bms timing daly_bms_serial
+                        mcp320x)

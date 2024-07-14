@@ -13,6 +13,8 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
+#include "lvgl_helpers.h"
+
 
 /*********************
  *      DEFINES

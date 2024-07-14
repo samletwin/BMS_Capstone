@@ -1,6 +1,6 @@
 
 V_source = 4.2
-V_max = 2.4
+V_max = 4
 V_min = 0
 R2 = 10000
 # R3 = 28000

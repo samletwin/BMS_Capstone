@@ -4,7 +4,8 @@
 #include "driver/gpio.h"
 
 // Define GPIO pins to be used
-#define GPIO_SWITCH_BATTERY_DISCHARGE_OUT GPIO_NUM_5
+#define GPIO_SWITCH_BATTERY_DISCHARGE_OUT GPIO_NUM_3
+#define GPIO_SWITCH_BATTERY_CHARGE_OUT GPIO_NUM_4
 
 #ifdef __cplusplus
 extern "C" {

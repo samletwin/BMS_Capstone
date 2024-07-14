@@ -21,7 +21,7 @@ void printMat(const dspm::Mat* mat) {
   Phi = (A.t()*A)^-1 * A.t() * B
   A is a Nx2 matrix, first column all 1s, second column being the Nth current measurement
   B is a Nx1 matrix, with each row being the Nth voltage measurement */
-soh_result soh_LeastSquares(const uint16_t current_mA[], const uint16_t voltage_mV[], uint16_t size, bool debug) {
+soh_result soh_LeastSquares(const int16_t current_mA[], const uint16_t voltage_mV[], uint16_t size, bool debug) {
     dspm::Mat A(size, 2);
     dspm::Mat B(size, 1);
 
