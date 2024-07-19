@@ -13,13 +13,13 @@ dependencies:
   lvgl__lvgl:
     component_hash: null
     source:
-      path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl
+      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl
       type: local
     version: 7.11.0
   lvgl__lvgl_esp32_drivers:
     component_hash: null
     source:
-      path: C:\Users\Sam\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
+      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
       type: local
     version: 0.0.3
 manifest_hash: 0b43f985eee9cd545f88c556e2da8b6a6625f3b41779a27f03acd6bd1eb57d29

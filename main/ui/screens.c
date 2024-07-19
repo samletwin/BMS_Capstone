@@ -133,7 +133,7 @@ void create_screen_main_single_cell() {
     objects.lbl_single_cell_title = lbl_single_cell_title;
     lv_obj_set_pos(lbl_single_cell_title, 22, 17);
     lv_label_set_text(lbl_single_cell_title, "Single Cell Battery Stats");
-    lv_obj_set_style_local_text_font(lbl_single_cell_title, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_18);
+    lv_obj_set_style_local_text_font(lbl_single_cell_title, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_16);
     // lbl_soc
     lv_obj_t *lbl_soc = lv_label_create(parent_obj, NULL);
     objects.lbl_soc = lbl_soc;
@@ -233,7 +233,7 @@ void create_screen_main_single_cell() {
     lv_obj_set_size(btn_settings, 94, 42);
     lv_obj_set_event_cb(btn_settings, event_handler_cb_main_single_cell_btn_settings);
     lv_obj_set_style_local_value_str(btn_settings, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, "Settings");
-    lv_obj_set_style_local_value_font(btn_settings, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_18);
+    lv_obj_set_style_local_value_font(btn_settings, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_16);
 
     // lbl_rawMeasurements
     lv_obj_t *lbl_raw_measurements = lv_label_create(parent_obj, NULL);
@@ -242,7 +242,7 @@ void create_screen_main_single_cell() {
     lv_label_set_text(lbl_raw_measurements, "ADC Measurements");
     lv_obj_set_style_local_text_color(lbl_raw_measurements, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xffffffff));
     lv_obj_set_style_local_text_opa(lbl_raw_measurements, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_COVER);
-    lv_obj_set_style_local_text_font(lbl_raw_measurements, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_18);
+    lv_obj_set_style_local_text_font(lbl_raw_measurements, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_16);
     lv_obj_set_style_local_value_align(lbl_raw_measurements, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_LABEL_ALIGN_CENTER);
 
     // lbl_batVoltage

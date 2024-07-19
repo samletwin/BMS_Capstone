@@ -25,8 +25,6 @@
 #include "lvgl_helpers.h"
 
 #include "ui/ui.h"
-#include "adc.h"
-#include "gpio.h"
 #include "soh.h"
 #include "timing.h"
 #include "daly_bms_serial.h"
@@ -54,21 +52,20 @@ static Daly_BMS_UART bms;
  --------------------------------------------------------------------------------------- */
 extern "C" void app_main() {
     /* INIT */
-    adc_init();
-    gpio_init();
+    // adc_init();
+    // gpio_init();
     timer_initialize();
-    bms = Daly_BMS_UART();
+    // bms = Daly_BMS_UART();
 
-    if (true != bms.Init())
-        ESP_LOGE(TAG, "Error initializing daly BMS");
+    // if (true != bms.Init())
+        // ESP_LOGE(TAG, "Error initializing daly BMS");
 
     /* If you want to use a task to create the graphic, you NEED to create a Pinned task
      * Otherwise there can be problem such as memory corruption and so on.
      * NOTE: When not using Wi-Fi nor Bluetooth you can pin the lv_gui_main_task to core 0 */
-    // xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
-    xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
-    // xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
-    // xTaskCreate(gui_to_controller_task, "gui to controller task", 2048, NULL, 1, NULL);
+    xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 4096*2, NULL, 1, NULL, 1);
+    // xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
+    xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
 }
 
 static void lv_gui_update_variables_task(void *pvParameter) {
