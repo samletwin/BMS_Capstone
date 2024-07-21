@@ -52,8 +52,6 @@ static Daly_BMS_UART bms;
  --------------------------------------------------------------------------------------- */
 extern "C" void app_main() {
     /* INIT */
-    // adc_init();
-    // gpio_init();
     timer_initialize();
     // bms = Daly_BMS_UART();
 
@@ -95,29 +93,6 @@ static void daly_bms_task(void *pvParameter) {
             ESP_LOGE(TAG, "Failed to communicate with DALY BMS");
         }
         vTaskDelay(pdMS_TO_TICKS(DALY_BMS_UPDATE_TASK_DELAY_MS));
-    }
-}
-
-void gpio_toggle_soh_timer_callback(void *arg) {
-    periodicTimerType *periodic_timer = (periodicTimerType *)arg;
-    if (NULL == periodic_timer) {
-        ESP_LOGE("PERIODIC_TIMER", "Args for SOH timer callback are NULL");
-        return;
-    }
-
-    // Toggle GPIO pin
-    gpio_toggle_discharge_switch(false);
-
-    // Increment the toggle count
-    (periodic_timer->toggle_count_ui16)++;
-
-    ESP_LOGD("PERIODIC_TIMER", "GPIO toggled. Count: %d", periodic_timer->toggle_count_ui16);
-
-    // Check if we reached the maximum number of toggles
-    if (periodic_timer->toggle_count_ui16 >= periodic_timer->max_toggles_ui16) {
-        ESP_LOGI("PERIODIC_TIMER", "Maximum toggles reached. Deleting timer.");
-
-        ESP_ERROR_CHECK(delete_periodic_timer(periodic_timer));
     }
 }
 

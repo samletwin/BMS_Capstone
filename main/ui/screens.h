@@ -17,6 +17,7 @@ typedef struct _objects_t {
     lv_obj_t *main_single_cell;
     lv_obj_t *settings;
     lv_obj_t *keypad_screen;
+    lv_obj_t *wallpaper_screen;
     lv_obj_t *keyboard;
     lv_obj_t *key_text_area;
     lv_obj_t *dropdown_menu;
@@ -54,7 +55,10 @@ enum ScreensEnum {
     SCREEN_ID_MAIN_SINGLE_CELL = 0,
     SCREEN_ID_SETTINGS = 1,
     SCREEN_ID_KEYPAD_EDIT = 2,
+    SCREEN_ID_WALLPAPER = 3
 };
+
+void create_screen_wallpaper();
 
 void create_screen_main_single_cell();
 void tick_screen_main_single_cell();

@@ -5,7 +5,6 @@ set(INCLUDE_DIRS .)
 list(APPEND SOURCES "ui/screens.c")
 list(APPEND SOURCES "ui/ui.c")
 list(APPEND SOURCES "ui/styles.c")
-list(APPEND SOURCES "main_singleCell.cpp")
 list(APPEND SOURCES "main_dalyBms.cpp")
 list(APPEND SOURCES "global_vars.c")
                 

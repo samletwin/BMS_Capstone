@@ -331,6 +331,30 @@ void tick_screen_main_single_cell() {
 }
 
 
+void create_screen_wallpaper() {
+    // Create the main object
+    lv_obj_t *wallpaper = lv_obj_create(NULL, NULL);
+    objects.wallpaper_screen = wallpaper;
+    lv_obj_set_pos(wallpaper, 0, 0);
+    lv_obj_set_size(wallpaper, 480, 320);
+
+    // Set the background color
+    lv_obj_set_style_local_bg_color(wallpaper, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
+
+    // Create a label with the text
+    lv_obj_t *label = lv_label_create(wallpaper, NULL);
+    lv_label_set_text(label, "E-Bike State of Health Measurement System");
+    lv_obj_set_style_local_text_color(label, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_obj_set_style_local_text_font(label, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_28); // Adjust the font size as needed
+
+    // Set the label to wrap text within the bounds of the screen
+    lv_label_set_long_mode(label, LV_LABEL_LONG_BREAK);
+    lv_obj_set_width(label, 480-100);
+
+    // Align the label to the center
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+}
+
 void create_table(lv_obj_t *scr)
 {
     /* Create a table on the page */
@@ -496,6 +520,7 @@ void create_screens() {
     create_screen_main_single_cell();
     create_screen_settings();
     create_num_keyboard_screen();
+    create_screen_wallpaper();
 }
 
 typedef void (*tick_screen_func_t)();

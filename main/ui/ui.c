@@ -15,16 +15,18 @@ void loadScreen(enum ScreensEnum screenId) {
         lv_scr_load(objects.settings);
     else if (screenId == SCREEN_ID_KEYPAD_EDIT)
         lv_scr_load(objects.keypad_screen);
+    else if (screenId == SCREEN_ID_WALLPAPER)
+        lv_scr_load(objects.wallpaper_screen);
     else
         ESP_LOGE("UI", "Unable to load screen for screen ID %u, because the object for loading is not defined.", screenId);
 }
 
 void ui_init() {
     create_screens();
-    loadScreen(SCREEN_ID_MAIN_SINGLE_CELL);
+    loadScreen(SCREEN_ID_WALLPAPER);
 }
 
 void ui_tick() {
-    tick_screen(currentScreen);
+    // tick_screen(currentScreen);
 }
 
