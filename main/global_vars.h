@@ -9,19 +9,13 @@ extern "C" {
 
 typedef struct {
     uint8_t socPerc_ui8;
-    uint8_t sohPerc_ui8;
     float batRes_f32;
     float batOcv_f32;
     uint32_t batTts_ui32;
-    uint16_t adcBatVolt_mV_ui16;
-    int16_t adcBatCurrent_mA_si16;
+    uint16_t packVoltage_mV_ui16;
+    int16_t packCurrent_mA_si16;
+    uint16_t cellVoltage_mV_ui16[14];
 } ui_displayDataType;
-
-typedef struct {
-    uint16_t sampleRate_hz_ui16;
-    uint16_t dischargePeriod_ms_ui16;
-    uint8_t numDischarges_ui8;
-} soh_configDataType;
 
 typedef enum {
     UI_SWITCH_OFF = 0,
@@ -48,33 +42,22 @@ typedef struct {
 /* ------------------------------------------------------------------------------------
     SETTER FUNCTIONS
 ------------------------------------------------------------------------------------- */
-/* ADC Config Data */
-void set_sohConfig_sampleRate_hz_ui16(uint16_t val);
-void set_sohConfig_dischargePeriod_ms_ui16(uint16_t val);
-void set_sohConfig_numDischarges_ui8(uint8_t val);
-
 /* UI Event Data */
 void set_UI_sohMeasurementStatus_e(ui_startMeasurementType val);
 void set_UI_dischargeBattSwitch_e(ui_switchStatusType val);
 
 /* Display Data */
-void set_display_adcBatCurrent_mA_si16(int16_t val);
-void set_display_adcBatVolt_mV_ui16(uint16_t val);
+void set_display_packCurrent_mA_si16(int16_t val);
+void set_display_packVoltage_mV_ui16(uint16_t val);
 void set_display_batTts_ui32(uint32_t val);
 void set_display_batOcv_f32(float val);
 void set_display_batRes_f32(float val);
-void set_display_sohPerc_ui8(uint8_t val);
 void set_display_socPerc_ui8(uint8_t val);
+void set_display_cellVoltage_mV_ui16(uint16_t index, uint16_t val);
 
 /* ------------------------------------------------------------------------------------
     GETTER FUNCTIONS
 ------------------------------------------------------------------------------------- */
-/* ADC Config Data */
-const soh_configDataType* get_all_sohConfigData_ps(void);
-uint16_t get_sohConfig_sampleRate_hz_ui16(void);
-uint16_t get_sohConfig_dischargePeriod_ms_ui16(void);
-uint8_t get_sohConfig_numDischarges_ui8(void);
-
 /* UI Event Data */
 const ui_eventDataType* get_all_UI_eventData_ps(void);
 ui_startMeasurementType get_UI_sohMeasurementStatus_e(void);
@@ -82,13 +65,13 @@ ui_switchStatusType get_UI_dischargeBattSwitch_e(void);
 
 /* Display Data */
 const ui_displayDataType* get_all_UI_displayData_ps(void);
-int16_t get_display_adcBatCurrent_mA_si16(void);
-uint16_t get_display_adcBatVolt_mV_ui16(void);
+int16_t get_display_packCurrent_mA_si16(void);
+uint16_t get_display_packVoltage_mV_ui16(void);
 uint32_t get_display_batTts_ui32(void);
 float get_display_batOcv_f32(void);
 float get_display_batRes_f32(void);
-uint8_t get_display_sohPerc_ui8(void);
 uint8_t get_display_socPerc_ui8(void);
+uint16_t get_display_cellVoltage_mV_ui16(uint16_t index);
 
 #ifdef __cplusplus
 }

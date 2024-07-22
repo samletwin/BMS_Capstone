@@ -1,8 +1,6 @@
 #ifndef MAIN_CFG_H
 #define MAIN_CFG_H
 
-// #define MAIN_SINGLE_CELL
-#define MAIN_DALY_BMS
 
 #define DALY_BMS_UPDATE_TASK_DELAY_MS 250
 
