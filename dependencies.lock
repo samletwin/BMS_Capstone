@@ -9,19 +9,7 @@ dependencies:
     component_hash: null
     source:
       type: idf
-    version: 4.4.7
-  lvgl__lvgl:
-    component_hash: null
-    source:
-      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl
-      type: local
-    version: 7.11.0
-  lvgl__lvgl_esp32_drivers:
-    component_hash: null
-    source:
-      path: C:\Users\samle\Desktop\capstone\singleCell_espidf\components\lvgl__lvgl_esp32_drivers
-      type: local
-    version: 0.0.3
-manifest_hash: 0b43f985eee9cd545f88c556e2da8b6a6625f3b41779a27f03acd6bd1eb57d29
+    version: 5.2.1
+manifest_hash: e8f670754f845fc8b2b2900985651b9aa52cabe90dfbf9e1947288703946477b
 target: esp32c3
 version: 1.0.0

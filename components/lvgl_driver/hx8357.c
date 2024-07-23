@@ -16,11 +16,11 @@
  *      INCLUDES
  *********************/
 #include "hx8357.h"
-#include "disp_spi.h"
 #include "driver/gpio.h"
 #include <esp_log.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "spi_helper.h"
 
 /*********************
  *      DEFINES
@@ -271,7 +271,7 @@ static void hx8357_send_cmd(uint8_t cmd)
 {
 	disp_wait_for_pending_transactions();
 	gpio_set_level(HX8357_DC, 0);	 /*Command mode*/
-	disp_spi_send_data(&cmd, 1);
+	spi_helper_send_data(&cmd, 1);
 }
 
 
@@ -279,7 +279,7 @@ static void hx8357_send_data(void * data, uint16_t length)
 {
 	disp_wait_for_pending_transactions();
 	gpio_set_level(HX8357_DC, 1);	 /*Data mode*/
-	disp_spi_send_data(data, length);
+	spi_helper_send_data(data, length);
 }
 
 
@@ -288,5 +288,5 @@ static void hx8357_send_color(void * data, uint16_t length)
 	disp_wait_for_pending_transactions();
 	gpio_set_level(HX8357_DC, 1);   /*Data mode*/
   // ESP_LOGI("HX8357D", "Attempting to send %u bytes of color data", length);
-	disp_spi_send_colors(data, length);
+	spi_helper_send_colors(data, length);
 }
