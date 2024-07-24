@@ -1,16 +1,19 @@
-# Single Cell Capstone Project
+# E-Bike BMS Display Capstone Project
+
+Using ESP32C3 controller to communicate with a Daly BMS connected to an E-Bike and display readings from the BMS onto the Adafruit 320x480 Capactive Touch Screen: https://www.adafruit.com/product/5846
+
+Readings from the BMS are logged to an SD Card. Additionally, from the cell voltage readings we are using characterized data collected by the BMS Lab at the University of Windsor to display a much more accurate State of Charge of the pack.
+
+SOC Data can be found here: https://github.com/soorajsunil/Piecewise-OCV-SOC
 
 # Dependencies
-ESP-IDF >= 4.1.0
+ESP-IDF >= 5.2
+- Previous versions might work but haven't checked
 
 ESP-DSP = 1.4.12 
 - Using linear algebra from this library to calculate SOH
-  
-lvgl_esp32_drivers = 0.0.3
-- Library for interfacing multiple display chips with LVGL using an ESP32 type controller
-- Added onto this library for FT53XX touch controller
 
-LVGL = 7.11.0
-- Version of LVGL used to create lvgl_esp32_drivers
+LVGL >= 9.0
+- Previous versions will not work, as v9 had big API changes
 
 
