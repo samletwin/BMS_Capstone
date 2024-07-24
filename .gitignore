@@ -1,4 +1,4 @@
 build/
 .vscode/
-managed_components/espressif__esp-dsp/
+managed_components/
 scripts/log/output/
