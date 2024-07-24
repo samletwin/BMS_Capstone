@@ -15,7 +15,7 @@ typedef enum {
 
 /// @brief Function that handles initializing SPI bus, as well as adding HX8357 Display and SD Card to the bus.
 /// @return  
-esp_err_t spi_init(spi_init_type initType_e);
+esp_err_t spi_full_init(spi_init_type initType_e);
 
 #ifdef __cplusplus
 } /* extern "C" */

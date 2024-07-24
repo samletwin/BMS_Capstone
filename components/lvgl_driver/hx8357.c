@@ -16,6 +16,7 @@
  *      INCLUDES
  *********************/
 #include "hx8357.h"
+#include "hx8357_cfg.h"
 #include "driver/gpio.h"
 #include <esp_log.h>
 #include "freertos/FreeRTOS.h"
@@ -156,53 +157,54 @@ static const uint8_t
  *   GLOBAL FUNCTIONS
  **********************/
 static uint8_t displayType = HX8357D;
+extern spi_device_handle_t hx8357_spi_handle;
 
 void hx8357_init(void)
 {
-	//Initialize non-SPI GPIOs
-    gpio_pad_select_gpio(HX8357_DC);
-	gpio_set_direction(HX8357_DC, GPIO_MODE_OUTPUT);
+    //Initialize non-SPI GPIOs
+    esp_rom_gpio_pad_select_gpio(HX8357_DC);
+    gpio_set_direction(HX8357_DC, GPIO_MODE_OUTPUT);
 
 #if HX8357_USE_RST
-    gpio_pad_select_gpio(HX8357_RST);
-	gpio_set_direction(HX8357_RST, GPIO_MODE_OUTPUT);
+    esp_rom_gpio_pad_select_gpio(HX8357_RST);
+    gpio_set_direction(HX8357_RST, GPIO_MODE_OUTPUT);
 
-	//Reset the display
-	gpio_set_level(HX8357_RST, 0);
-	vTaskDelay(10 / portTICK_RATE_MS);
-	gpio_set_level(HX8357_RST, 1);
-	vTaskDelay(120 / portTICK_RATE_MS);
+    //Reset the display
+    gpio_set_level(HX8357_RST, 0);
+    vTaskDelay(10 / portTICK_PERIOD_MS);
+    gpio_set_level(HX8357_RST, 1);
+    vTaskDelay(120 / portTICK_PERIOD_MS);
 #endif
 
-	ESP_LOGI(TAG, "Initialization.");
+  ESP_LOGI(TAG, "Initialization.");
 
-	//Send all the commands
-	const uint8_t *addr = (displayType == HX8357B) ? initb : initd;
-	uint8_t        cmd, x, numArgs;
-	while((cmd = *addr++) > 0) { // '0' command ends list
-		x = *addr++;
-		numArgs = x & 0x7F;
-		if (cmd != 0xFF) { // '255' is ignored
-			if (x & 0x80) {  // If high bit set, numArgs is a delay time
-				hx8357_send_cmd(cmd);
-			} else {
-				hx8357_send_cmd(cmd);
-				hx8357_send_data((void *) addr, numArgs);
-				addr += numArgs;
-			}
-		}
-		if (x & 0x80) {       // If high bit set...
-			vTaskDelay(numArgs * 5 / portTICK_RATE_MS); // numArgs is actually a delay time (5ms units)
-		}
-	}
+    //Send all the commands
+    const uint8_t *addr = (displayType == HX8357B) ? initb : initd;
+    uint8_t        cmd, x, numArgs;
+    while((cmd = *addr++) > 0) { // '0' command ends list
+        x = *addr++;
+        numArgs = x & 0x7F;
+        if (cmd != 0xFF) { // '255' is ignored
+            if (x & 0x80) {  // If high bit set, numArgs is a delay time
+                hx8357_send_cmd(cmd);
+            } else {
+                hx8357_send_cmd(cmd);
+                hx8357_send_data((void *) addr, numArgs);
+                addr += numArgs;
+            }
+        }
+        if (x & 0x80) {       // If high bit set...
+            vTaskDelay(numArgs * 5 / portTICK_PERIOD_MS); // numArgs is actually a delay time (5ms units)
+        }
+    }
 
-	hx8357_set_rotation(1);
+  hx8357_set_rotation(1);
 
-#if HX8357_INVERT_COLORS
-	hx8357_send_cmd(HX8357_INVON);
-#else
+  #if HX8357_INVERT_COLORS
+  hx8357_send_cmd(HX8357_INVON);
+  #else
     hx8357_send_cmd(HX8357_INVOFF);
-#endif
+  #endif
 }
 
 
@@ -269,24 +271,24 @@ void hx8357_set_rotation(uint8_t r)
 
 static void hx8357_send_cmd(uint8_t cmd)
 {
-	disp_wait_for_pending_transactions();
+	spi_helper_wait_for_pending_transactions(hx8357_spi_handle);
 	gpio_set_level(HX8357_DC, 0);	 /*Command mode*/
-	spi_helper_send_data(&cmd, 1);
+	spi_helper_send_data(&cmd, 1, hx8357_spi_handle);
 }
 
 
 static void hx8357_send_data(void * data, uint16_t length)
 {
-	disp_wait_for_pending_transactions();
+	spi_helper_wait_for_pending_transactions(hx8357_spi_handle);
 	gpio_set_level(HX8357_DC, 1);	 /*Data mode*/
-	spi_helper_send_data(data, length);
+	spi_helper_send_data(data, length, hx8357_spi_handle);
 }
 
 
 static void hx8357_send_color(void * data, uint16_t length)
 {
-	disp_wait_for_pending_transactions();
+	spi_helper_wait_for_pending_transactions(hx8357_spi_handle);
 	gpio_set_level(HX8357_DC, 1);   /*Data mode*/
   // ESP_LOGI("HX8357D", "Attempting to send %u bytes of color data", length);
-	spi_helper_send_colors(data, length);
+	spi_helper_send_colors(data, length, hx8357_spi_handle);
 }

@@ -608,7 +608,7 @@ bool Daly_BMS_UART::setBmsReset() // 0x00 Reset the BMS
 void Daly_BMS_UART::sendCommand(COMMAND cmdID)
 {
     // Clear all incoming UART to avoid data collision
-    while (uart_read_bytes(this->uart_port, this->my_rxBuffer, 1, 10 / portTICK_RATE_MS) > 0);
+    while (uart_read_bytes(this->uart_port, this->my_rxBuffer, 1, 10 / portTICK_PERIOD_MS) > 0);
 
     uint8_t checksum = 0;
     this->my_txBuffer[2] = cmdID;
@@ -631,7 +631,7 @@ bool Daly_BMS_UART::receiveBytes(void)
     memset(this->my_rxBuffer, 0, XFER_BUFFER_LENGTH);
 
     // Read bytes from the specified UART interface
-    int rxByteNum = uart_read_bytes(this->uart_port, this->my_rxBuffer, XFER_BUFFER_LENGTH, 1000 / portTICK_RATE_MS);
+    int rxByteNum = uart_read_bytes(this->uart_port, this->my_rxBuffer, XFER_BUFFER_LENGTH, 1000 / portTICK_PERIOD_MS);
 
     // Make sure we got the correct number of bytes
     if (rxByteNum != XFER_BUFFER_LENGTH)

@@ -1,18 +1,20 @@
-#ifndef SPI_HELPER_CFG_H
-#define SPI_HELPER_CFG_H
+#ifndef _SPI_HELPER_CFG_H
+#define _SPI_HELPER_CFG_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "hx8357_cfg.h"
+#include "hal/spi_types.h"
 
-#define DISP_CS_PIN         -1
-#define SD_CARD_CS_PIN      -1
 
-#define SPI_MOSI_PIN        -1
-#define SPI_MISO_PIN        -1
-#define SPI_CLK_PIN         -1
+#define DISP_CS_PIN         2
+#define SD_CARD_CS_PIN      3
+
+#define SPI_MOSI_PIN        8
+#define SPI_MISO_PIN        9
+#define SPI_CLK_PIN         20
 #define SPI_QUADWP_PIN      -1
 #define SPI_QUADHD_PIN      -1
 
@@ -20,7 +22,7 @@ extern "C" {
 
 #define SPI_MAX_TRANSFER_SIZE   HX8357_BUF_SIZE
 
-#define SPI_HOST            1
+#define SPI_CFG_HOST            SPI2_HOST
 
 /* Uncomment below is use SPI in Half Duplex mode */
 #define SPI_HELPER_HALF_DUPLEX
@@ -40,4 +42,4 @@ extern "C" {
 #endif
 
 
-#endif /* SPI_HELPER_CFG_H */
+#endif /* _SPI_HELPER_CFG_H */

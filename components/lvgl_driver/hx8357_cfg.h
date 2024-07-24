@@ -5,8 +5,10 @@
 extern "C" {
 #endif
 
-#define HX8357_DC             -1
-#define HX8357_RST            -1
+#include "hx8357.h"
+
+#define HX8357_DC             10
+#define HX8357_RST            4
 #define HX8357_USE_RST        1
 #define HX8357_INVERT_COLORS  0
 
@@ -21,7 +23,7 @@ extern "C" {
  * color format being used, for RGB565 each pixel needs 2 bytes.
  * When using the mono theme, the display pixels can be represented in one bit,
  * so the buffer size can be divided by 8, e.g. see SSD1306 display size. */
-#define HX8357_BUF_SIZE       480 * 40
+#define HX8357_BUF_SIZE       HX8357_TFTWIDTH * 40
 
 #ifdef __cplusplus
 } /* extern "C" */
