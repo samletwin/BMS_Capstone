@@ -72,7 +72,6 @@ uint8_t ft53xx_get_gesture_id();
   */
 void ft53xx_read(lv_indev_t  *indev, lv_indev_data_t *data);
 
-
 #ifdef __cplusplus
 }
 #endif

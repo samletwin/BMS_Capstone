@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "global_vars.h"
 
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
@@ -18,13 +17,13 @@
 
 #include "lvgl.h"
 
-#include "ui/ui.h"
 #include "soh.h"
 #include "daly_bms_serial.h"
 #include "hx8357_cfg.h"
 #include "hx8357.h"
 #include "FT53xx.h"
 #include "spi_init.h"
+#include "ui_main.h"
 
 /*********************
  *      DEFINES
@@ -43,6 +42,8 @@ static void lv_gui_update_variables_task(void *pvParameter);
 static SemaphoreHandle_t xGuiSemaphore;
 static bool lvgl_ui_is_init = false;
 static Daly_BMS_UART bms;
+static UIMain* lvgl_ui_main_ptr = nullptr;
+
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
  --------------------------------------------------------------------------------------- */
@@ -97,6 +98,8 @@ static void lv_gui_main_task(void *pvParameter) {
     xGuiSemaphore = xSemaphoreCreateMutex();
     ESP_LOGD(TAG, "about to start lv_init");
     lv_init();
+    // Wait a bit for LVGL to initialize
+    vTaskDelay(pdMS_TO_TICKS(100));
     ESP_LOGD(TAG, "about to init  spi");
     /* Initialize SPI or I2C bus used by the drivers */
     spi_full_init(SPI_INIT_DISPLAY_ONLY);
@@ -127,8 +130,23 @@ static void lv_gui_main_task(void *pvParameter) {
     ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
     ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, LV_TICK_PERIOD_MS * 1000));
 
-    /* init the ui */
-    // ui_init();
+    // Create UIMain instance
+    lvgl_ui_main_ptr = new UIMain();
+    if (lvgl_ui_main_ptr == nullptr) {
+        ESP_LOGE(TAG, "Failed to create UIMain instance");
+        return;
+    }
+
+    // Initialize UIMain
+    if (!lvgl_ui_main_ptr->init()) {
+        ESP_LOGE(TAG, "Failed to initialize UIMain");
+        delete lvgl_ui_main_ptr;
+        return;
+    }
+
+    // Show the UI
+    lvgl_ui_main_ptr->show();
+
     lvgl_ui_is_init = true;
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(GUI_TASK_DELAY_MS));
