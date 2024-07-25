@@ -7,8 +7,14 @@ Readings from the BMS are logged to an SD Card. Additionally, from the cell volt
 SOC Data can be found here: https://github.com/soorajsunil/Piecewise-OCV-SOC
 
 # Dependencies
-ESP-IDF >= 5.2
-- Previous versions might work but haven't checked
+ESP-IDF = 5.1.X
+- Arduino Core for ESP-IDF only works with ESP-IDF version of 5.1.X
+
+Arduino-ESP32 >= 3.0.X
+https://github.com/espressif/arduino-esp32
+- Using Arduino Core for communicate with the Daly BMS over UART
+- Github used for Daly is here: https://github.com/maland16/daly-bms-uart
+- This Daly library could be implemented in ESP-IDF but due to time constraints it was just easier to import it as an arduino component
 
 ESP-DSP = 1.4.12 
 - Using linear algebra from this library to calculate SOH
