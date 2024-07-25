@@ -5,6 +5,12 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 1.0.3
+  espressif/arduino-esp32:
+    component_hash: af19aa363044ffdb1d8da3e08f1a417db4e941a034f1422f98d342971ff654f5
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 3.0.3
   espressif/cbor:
     component_hash: 440f4ee4504841cc9b4f3a8ef755776a612ac9dace355514c68b999868f990ff
     source:
@@ -136,6 +142,6 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 9.1.0
-manifest_hash: 4361a168e5564c87249b68b78ea9d7e39c56e97e8282193f2794bb7895fd6db3
+manifest_hash: b338a65e8688df1991a9d2fead3a2b9dd17cbf54fdc3df3d20407fbba08fa25a
 target: esp32c3
 version: 1.0.0
