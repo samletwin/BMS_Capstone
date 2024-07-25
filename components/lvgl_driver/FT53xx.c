@@ -14,6 +14,7 @@
 #include "FT53xx_cfg.h"
 #include "i2c_helper.h"
 #include "i2c_helper_cfg.h"
+#include "hx8357.h"
 
 #define TAG "FT5336"
 
@@ -124,7 +125,18 @@ void ft53xx_read(lv_indev_t  *indev, lv_indev_data_t *data) {
     else {
         data->state = LV_INDEV_STATE_PRESSED;
     }
-    data->point.x = last_x;
-    data->point.y = last_y;
+    
+    if (last_x <= HX8357_TFTHEIGHT && last_x >= 0) {
+        data->point.x = last_x;
+    }
+    else {
+        data->point.x = 0;
+    }
+    if (last_y <= HX8357_TFTWIDTH && last_y >= 0) {
+        data->point.y = last_y;
+    }
+    else {
+        data->point.y = 0;
+    }
     // ESP_LOGD(TAG, "X=%i Y=%i", data->point.x, data->point.y);
 }

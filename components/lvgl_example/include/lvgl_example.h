@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 void lv_example_menu_5(void);
+void lv_example_menu_2(void);
 
 #ifdef __cplusplus
 } /* extern C */

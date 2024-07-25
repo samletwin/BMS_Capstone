@@ -1,33 +1,18 @@
 #ifndef UI_SCREEN_H
 #define UI_SCREEN_H
 
-#include "esp_system.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include <lvgl.h>
-#include <vector>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-class UIScreen {
-public:
-    UIScreen();
-    ~UIScreen();
+#include "lvgl.h"
 
-    typedef void (*CreateFunction)(lv_obj_t*);
-    typedef void (*UpdateFunction)(void*);
+void ui_screen_init(void);
+lv_obj_t* ui_screen_get_menu(void);
+void ui_screen_create_menu(void);
 
-    void setCreateFunction(CreateFunction createFunc);
-    void setUpdateFunction(UpdateFunction updateFunc, void* userData);
-    void createScreen();
-    void setScreen(lv_obj_t* screen);
-    void updateScreen();
-    lv_obj_t* getScreen() const;
-
-private:
-    lv_obj_t* parentScreen;
-    std::vector<lv_obj_t*> screenObjects;
-    CreateFunction createFunction;
-    UpdateFunction updateFunction;
-    void* updateUserData;
-};
+#ifdef __cplusplus
+} /* extern C */
+#endif
 
 #endif // UI_SCREEN_H

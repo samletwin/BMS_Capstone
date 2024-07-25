@@ -1,50 +1,55 @@
 #ifndef UI_MANAGER_H
 #define UI_MANAGER_H
 
-#include "esp_system.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include <vector>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "lvgl.h"
 #include <stdint.h>
 
-class UIManager {
-public:
-    UIManager();
-    ~UIManager();
+#define MAX_CELLS 14
 
-    void updatePackVoltage(float voltage);
-    void updatePackCurrent(float current);
-    void updateBmsSoc(float soc);
-    void updateMySoc(float soc);
-    void updateNumberOfCells(uint8_t cellCount);
-    void updateCellVoltages(const std::vector<float>& voltages);
-    void updateBmsCapacity(int capacitymAh);
-    void updateMyCapacity(int capacitymAh);
-    void updateCellTemperature(int temperature);
-    void updateTimeToShutdown(float time);
+typedef struct {
+    float voltage_V_f;
+    float current_A_f;
+    uint8_t soh_perc_ui8;
+    uint8_t dalySoc_perc_ui8;
+    uint8_t ourSoc_perc_ui8;
+    uint16_t dalyCapacity_Ah_ui16;
+    float ourInternalResistance_mOhm_f;
+} pack_data_t;
 
-    float getPackVoltage() const;
-    float getPackCurrent() const;
-    float getBmsSoc() const;
-    float getMySoc() const;
-    uint8_t getNumberOfCells() const;
-    const std::vector<float>& getCellVoltages() const;
-    int getBmsCapacity() const;
-    int getMyCapacity() const;
-    int getCellTemperature() const;
-    float getTimeToShutdown() const;
+typedef struct {
+    float voltage;
+    float soc;
+} cell_data_t;
 
-private:
-    float packVoltage;
-    float packCurrent;
-    float bmsSoc;
-    float mySoc;
-    uint8_t numberOfCells;
-    std::vector<float> cellVoltages;
-    int bmsCapacitymAh;
-    int myCapacitymAh;
-    int cellTemperature;
-    float timeToShutdown;
-};
+void ui_manager_init(void);
+
+// Pack data getters and setters
+void ui_manager_set_pack_data(pack_data_t data);
+pack_data_t ui_manager_get_pack_data(void);
+
+// Individual setters for pack data
+void ui_manager_set_pack_voltage_V(float voltage);
+void ui_manager_set_pack_current_A(float current);
+void ui_manager_set_pack_soh_perc(uint8_t soh);
+void ui_manager_set_daly_soc_perc(uint8_t soc);
+void ui_manager_set_our_soc_perc(uint8_t soc);
+void ui_manager_set_daly_capacity_Ah(uint16_t capacity);
+void ui_manager_set_our_internal_resistance_mOhm(float resistance);
+
+// Cell data getters and setters
+void ui_manager_set_cell_data(int cell_index, cell_data_t data);
+cell_data_t ui_manager_get_cell_data(int cell_index);
+
+// Individual setters for cell data
+void ui_manager_set_cell_voltage(int cell_index, float voltage);
+void ui_manager_set_cell_soc(int cell_index, float soc);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif // UI_MANAGER_H
