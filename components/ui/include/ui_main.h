@@ -15,25 +15,22 @@ public:
     UIMain();
     ~UIMain();
     
-    bool init();  // New initialization method
+    bool init();
     void show();
-    void stopAnimations();
     UIManager& getUIManager();
 
 private:
-    UIScreen mainScreen;
     UIManager uiManager;
-    UIAnimations animations;
-    
-    lv_obj_t* warningLabel;
-    lv_obj_t* exclamationIcon;
-    bool animationPlaying;
-    bool initialized;
+    lv_obj_t* menu;
+    lv_obj_t* packDataPage;
+    lv_obj_t* cellDataPage;
+    lv_obj_t* settingsPage;
 
-    void createUI(lv_obj_t* parent);
-    void updateUI();
-    void startAnimations();
-    static void staticUpdateFunction(void* userData);
+    void createMenu();
+    void createPackDataPage();
+    void createCellDataPage();
+    void createSettingsPage();
+    static void menuBackEventHandler(lv_event_t* e);
 };
 
 #endif // UI_MAIN_H

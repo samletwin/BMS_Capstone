@@ -117,8 +117,14 @@ void ft53xx_read(lv_indev_t  *indev, lv_indev_data_t *data) {
 #if (CONFIG_LV_FT53XX_INVERT_Y == 1)
     last_y = LV_VER_RES - last_y;
 #endif
+
+    if (data->point.x == last_x && data->point.y == last_y) {
+        data->state = LV_INDEV_STATE_RELEASED;
+    }
+    else {
+        data->state = LV_INDEV_STATE_PRESSED;
+    }
     data->point.x = last_x;
     data->point.y = last_y;
-    data->state = LV_INDEV_STATE_PR;
     // ESP_LOGD(TAG, "X=%i Y=%i", data->point.x, data->point.y);
 }

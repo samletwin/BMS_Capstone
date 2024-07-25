@@ -12,13 +12,12 @@ public:
     UIAnimations();
     ~UIAnimations();
 
-    void addFadeAnimation(lv_obj_t* obj, uint32_t duration, lv_opa_t startOpacity, lv_opa_t endOpacity);
-    void addMoveAnimation(lv_obj_t* obj, uint32_t duration, lv_coord_t startX, lv_coord_t startY, lv_coord_t endX, lv_coord_t endY);
-    void addScaleAnimation(lv_obj_t* obj, uint32_t duration, lv_coord_t startScale, lv_coord_t endScale);
-    void addCustomAnimation(lv_obj_t* obj, uint32_t duration, lv_anim_exec_xcb_t exec_cb, int32_t start, int32_t end);
+    void addPulseAnimation(lv_obj_t* obj, uint32_t duration);
+    void addRotateAnimation(lv_obj_t* obj, uint32_t duration);
+    void stopAllAnimations();
 
 private:
-    std::vector<lv_anim_t> animations;
+    std::vector<lv_anim_t*> animations;
 };
 
 #endif // UI_ANIMATIONS_H
