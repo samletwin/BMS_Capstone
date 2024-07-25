@@ -7,11 +7,15 @@
 #include "hx8357.h"
 #include "driver/spi_master.h"
 #include "esp_log.h"
+#include "driver/sdspi_host.h"
+#include "driver/sdmmc_host.h"
+#include "esp_vfs_fat.h"
+#include "sdmmc_cmd.h"
 
 #define TAG "SPI_INIT"
 
 spi_device_handle_t hx8357_spi_handle;
-
+spi_device_handle_t sd_spi_handle;
 
 static void IRAM_ATTR spi_ready (spi_transaction_t *trans);
 
@@ -60,6 +64,59 @@ esp_err_t spi_bus_init() {
     return ESP_OK != ret;
 }
 
+esp_err_t spi_sd_init() {
+    ESP_LOGI(TAG, "Adding SPI device SD Card");
+
+    spi_device_interface_config_t devcfg = {
+        .clock_speed_hz = SPI_CLOCK_SPEED,  // You might want to adjust this for SD card
+        .mode = 0,
+        .spics_io_num = SD_CARD_CS_PIN,
+        .queue_size = SPI_TRANSACTION_POOL_SIZE,
+        .flags = SPI_DEVICE_NO_DUMMY,
+    };
+
+    esp_err_t ret = spi_bus_add_device(SPI_CFG_HOST, &devcfg, &sd_spi_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to add SD card SPI device");
+        return ret;
+    }
+
+    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+    host.slot = SPI_CFG_HOST;
+    host.max_freq_khz = SPI_CLOCK_SPEED / 1000;
+
+    sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
+    slot_config.gpio_cs = SD_CARD_CS_PIN;
+    slot_config.host_id = host.slot;
+
+    sdmmc_card_t* card;
+    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+        .format_if_mount_failed = true,
+        .max_files = 5,
+        .allocation_unit_size = 16 * 1024
+    };
+
+    const char mount_point[] = "/sdcard";
+    ESP_LOGI(TAG, "Mounting filesystem");
+    ret = esp_vfs_fat_sdspi_mount(mount_point, &host, &slot_config, &mount_config, &card);
+
+    if (ret != ESP_OK) {
+        if (ret == ESP_FAIL) {
+            ESP_LOGE(TAG, "Failed to mount filesystem. "
+                     "If you want the card to be formatted, set format_if_mount_failed = true.");
+        } else {
+            ESP_LOGE(TAG, "Failed to initialize the card (%s). "
+                     "Make sure SD card lines have pull-up resistors in place.", esp_err_to_name(ret));
+        }
+        return ret;
+    }
+
+    // Card has been initialized, print its properties
+    sdmmc_card_print_info(stdout, card);
+
+    return ESP_OK;
+}
+
 esp_err_t spi_hx8357_init() {
     ESP_LOGI(TAG, "Adding SPI device HX8357");
 
@@ -82,20 +139,36 @@ esp_err_t spi_hx8357_init() {
 }
 
 esp_err_t spi_full_init(spi_init_type initType_e) {
-    if (SPI_INIT_DISPLAY_ONLY==initType_e)
+    if (SPI_INIT_DISPLAY_ONLY == initType_e)
         ESP_LOGI(TAG, "Initializing SPI master for display only");
-    else if (SPI_INIT_SD_LOG_ONLY==initType_e)
+    else if (SPI_INIT_SD_LOG_ONLY == initType_e)
         ESP_LOGI(TAG, "Initializing SPI master for SD Log only");
-    else if (SPI_INIT_BOTH==initType_e)
+    else if (SPI_INIT_BOTH == initType_e)
         ESP_LOGI(TAG, "Initializing SPI master for both SD Log and Display");
     else
         ESP_LOGE(TAG, "Initializing SPI master for not defined devices");
     
     ESP_LOGI(TAG, "Configuring SPI SPI_CFG_HOST %d", SPI_CFG_HOST);
 
-    spi_bus_init();
-    spi_hx8357_init();
-    hx8357_init();
+    esp_err_t ret = spi_bus_init();
+    if (ret != ESP_OK) {
+        return ret;
+    }
+
+    if (initType_e == SPI_INIT_DISPLAY_ONLY || initType_e == SPI_INIT_BOTH) {
+        ret = spi_hx8357_init();
+        if (ret != ESP_OK) {
+            return ret;
+        }
+        hx8357_init();
+    }
+    
+    if (initType_e == SPI_INIT_SD_LOG_ONLY || initType_e == SPI_INIT_BOTH) {
+        ret = spi_sd_init();
+        if (ret != ESP_OK) {
+            return ret;
+        }
+    }
 
     return ESP_OK;
 }
