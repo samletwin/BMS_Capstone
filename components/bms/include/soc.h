@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define TABLE_SIZE 50
+#define TABLE_SIZE 30
 
 class BatterySOC {
 private:

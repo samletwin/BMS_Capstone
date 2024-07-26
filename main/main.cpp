@@ -121,7 +121,7 @@ static void daly_bms_task(void *pvParameter) {
             ui_manager_set_pack_voltage_V(&bms.get.packVoltage);
             ui_manager_set_pack_current_A(&bms.get.packCurrent);
             ui_manager_set_daly_soc_perc(&bms.get.packSOC);
-            float soc = battery_soc.getSOC();
+            float soc = battery_soc.getSOC()*100;
             ui_manager_set_our_soc_perc(&soc);
             uint16_t cap = (uint16_t)(bms.get.resCapacitymAh/1000);
             ui_manager_set_daly_capacity_Ah(&cap);

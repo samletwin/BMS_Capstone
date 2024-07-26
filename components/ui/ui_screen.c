@@ -30,8 +30,8 @@ static void tick_pack_data_screen(lv_obj_t *parent)
 {
     pack_data_t pack_data = ui_manager_get_pack_data();
 
-    pack_data.dalySoc_perc_f = 83.0f;
-    pack_data.ourSoc_perc_f = 9.0f;
+    // pack_data.dalySoc_perc_f = 83.0f;
+    // pack_data.ourSoc_perc_f = 9.0f;
     // Update Daly BMS SOC battery
     if (daly_bms_soc_bar != NULL) {
         battery_widget_set_value(daly_bms_soc_bar, (int32_t)pack_data.dalySoc_perc_f);
