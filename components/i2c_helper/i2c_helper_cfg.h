@@ -22,8 +22,8 @@ extern "C" {
 #define I2C_FREQ_HZ 4*1000*100 // 400 kHz
 #define I2C_PORT    I2C_NUM_0
 
-#define I2C_SDA_PULLUP  GPIO_PULLUP_DISABLE
-#define I2C_SCL_PULLUP  GPIO_PULLUP_DISABLE
+#define I2C_SDA_PULLUP  GPIO_PULLUP_ENABLE
+#define I2C_SCL_PULLUP  GPIO_PULLUP_ENABLE
 
 #ifdef __cplusplus
 } /* extern C */

@@ -12,6 +12,9 @@ static lv_obj_t* packDataPage;
 static lv_obj_t* cellDataPage;
 static lv_obj_t* settingsPage;
 
+static battery_widget_t *daly_bms_soc_bar = NULL;
+static battery_widget_t *our_soc_bar = NULL;
+static lv_obj_t* packDataTable = NULL;
 static lv_obj_t* currentLoadedSubPage = NULL;
 static bool show_voltage = true;  // Global variable to track what data to show
 
@@ -27,28 +30,42 @@ static void tick_pack_data_screen(lv_obj_t *parent)
 {
     pack_data_t pack_data = ui_manager_get_pack_data();
 
+    pack_data.dalySoc_perc_f = 83.0f;
+    pack_data.ourSoc_perc_f = 9.0f;
     // Update Daly BMS SOC battery
-    lv_obj_t *daly_bms_soc_bar = lv_obj_get_child(parent, 0);
-    battery_widget_set_value((battery_widget_t *)daly_bms_soc_bar, (uint16_t)pack_data.dalySoc_perc_f);
+    if (daly_bms_soc_bar != NULL) {
+        battery_widget_set_value(daly_bms_soc_bar, (int32_t)pack_data.dalySoc_perc_f);
+    }
+    else {
+        ESP_LOGE(TAG, "Unable to update daly bms soc bar because it is null");
+    }
 
-    // Update Our SOC battery
-    lv_obj_t *our_soc_bar = lv_obj_get_child(parent, 1);
-    battery_widget_set_value((battery_widget_t *)our_soc_bar, (uint16_t)pack_data.ourSoc_perc_f);
+    if (our_soc_bar != NULL) {
+        battery_widget_set_value(our_soc_bar, (int32_t)pack_data.ourSoc_perc_f);
+    }
+    else {
+        ESP_LOGE(TAG, "Unable to update our bms soc bar because it is null");
+    }
 
     // Update table values
-    lv_obj_t *table = lv_obj_get_child(parent, 2);
+    // lv_obj_t *packDataTable = lv_obj_get_child(parent, 2);
     char buf[20];
-
+    // pack_data.voltage_V_f = 50.0f; 
+    if (packDataTable != NULL){
     snprintf(buf, sizeof(buf), "%.2fV", pack_data.voltage_V_f);
-    lv_table_set_cell_value(table, 0, 1, buf);
-    snprintf(buf, sizeof(buf), "%u%%", pack_data.soh_perc_ui8);
-    lv_table_set_cell_value(table, 1, 1, buf);
+    lv_table_set_cell_value(packDataTable, 0, 1, buf);
     snprintf(buf, sizeof(buf), "%uAh", pack_data.dalyCapacity_Ah_ui16);
-    lv_table_set_cell_value(table, 2, 1, buf);
+    lv_table_set_cell_value(packDataTable, 1, 1, buf);
     snprintf(buf, sizeof(buf), "%.2fA", pack_data.current_A_f);
-    lv_table_set_cell_value(table, 3, 1, buf);
+    lv_table_set_cell_value(packDataTable, 2, 1, buf);
     snprintf(buf, sizeof(buf), "%.3f mOhm", pack_data.ourInternalResistance_mOhm_f);
-    lv_table_set_cell_value(table, 4, 1, buf);
+    lv_table_set_cell_value(packDataTable, 3, 1, buf);
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Unable to update our pack table because it is null");
+
+    }
 }
 
 static void tick_cell_data_screen(lv_obj_t *parent)
@@ -135,41 +152,38 @@ static void create_pack_data_screen(lv_obj_t *parent)
     pack_data_t pack_data = ui_manager_get_pack_data();
 
     // Create Daly BMS SOC battery
-    battery_widget_t *daly_bms_soc = battery_widget_create(battery_cont, false, "Daly BMS SOC");
-    lv_obj_set_size(daly_bms_soc->bar, lv_pct(80), 50);
-    battery_widget_set_value(daly_bms_soc, (uint16_t)pack_data.dalySoc_perc_f);
+    daly_bms_soc_bar = battery_widget_create(battery_cont, false, "Daly BMS SOC");
+    lv_obj_set_size(daly_bms_soc_bar->bar, lv_pct(80), 50);
+    battery_widget_set_value(daly_bms_soc_bar, (uint16_t)pack_data.dalySoc_perc_f);
 
     // Create Our SOC battery
-    battery_widget_t *our_soc = battery_widget_create(battery_cont, false, "Our SOC");
-    lv_obj_set_size(our_soc->bar, lv_pct(80), 50);
-    battery_widget_set_value(our_soc, (uint16_t)pack_data.ourSoc_perc_f);
+    our_soc_bar = battery_widget_create(battery_cont, false, "Our SOC");
+    lv_obj_set_size(our_soc_bar->bar, lv_pct(80), 50);
+    battery_widget_set_value(our_soc_bar, (uint16_t)pack_data.ourSoc_perc_f);
 
 
     // Create table
-    lv_obj_t *table = lv_table_create(main_cont);
-    lv_obj_set_size(table, lv_pct(TABLE_WIDTH_PERC), lv_pct(100));
+    packDataTable = lv_table_create(main_cont);
+    lv_obj_set_size(packDataTable, lv_pct(TABLE_WIDTH_PERC), lv_pct(100));
     
-    lv_table_set_column_count(table, 2);
-    lv_table_set_row_count(table, 5);
+    lv_table_set_column_count(packDataTable, 2);
+    lv_table_set_row_count(packDataTable, 4);
    
-    lv_table_set_cell_value(table, 0, 0, "Voltage");
-    lv_table_set_cell_value(table, 1, 0, "SOH");
-    lv_table_set_cell_value(table, 2, 0, "Capacity");
-    lv_table_set_cell_value(table, 3, 0, "Current");
-    lv_table_set_cell_value(table, 4, 0, "Resistance");
+    lv_table_set_cell_value(packDataTable, 0, 0, "Voltage");
+    lv_table_set_cell_value(packDataTable, 1, 0, "Capacity");
+    lv_table_set_cell_value(packDataTable, 2, 0, "Current");
+    lv_table_set_cell_value(packDataTable, 3, 0, "Resistance");
 
     // Set values from pack_data
     char buf[20];
     snprintf(buf, sizeof(buf), "%.2fV", pack_data.voltage_V_f);
-    lv_table_set_cell_value(table, 0, 1, buf);
-    snprintf(buf, sizeof(buf), "%u%%", pack_data.soh_perc_ui8);
-    lv_table_set_cell_value(table, 1, 1, buf);
+    lv_table_set_cell_value(packDataTable, 0, 1, buf);
     snprintf(buf, sizeof(buf), "%uAh", pack_data.dalyCapacity_Ah_ui16);
-    lv_table_set_cell_value(table, 2, 1, buf);
+    lv_table_set_cell_value(packDataTable, 1, 1, buf);
     snprintf(buf, sizeof(buf), "%.2fA", pack_data.current_A_f);
-    lv_table_set_cell_value(table, 3, 1, buf);
+    lv_table_set_cell_value(packDataTable, 2, 1, buf);
     snprintf(buf, sizeof(buf), "%.3f mOhm", pack_data.ourInternalResistance_mOhm_f);
-    lv_table_set_cell_value(table, 4, 1, buf);
+    lv_table_set_cell_value(packDataTable, 3, 1, buf);
 
     // Set some initial values 
     // lv_table_set_cell_value(table, 0, 1, "48.2V");
@@ -180,25 +194,25 @@ static void create_pack_data_screen(lv_obj_t *parent)
 
     // lv_obj_set_style_border_side(table, LV_BORDER_SIDE_FULL, LV_PART_ITEMS);
     // Remove table padding
-    lv_obj_set_style_pad_ver(table, 15, LV_PART_ITEMS);
-    lv_obj_set_style_pad_hor(table, 30, LV_PART_ITEMS);
-    lv_obj_clear_flag(table, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_pad_ver(packDataTable, 25, LV_PART_ITEMS);
+    lv_obj_set_style_pad_hor(packDataTable, 30, LV_PART_ITEMS);
+    lv_obj_clear_flag(packDataTable, LV_OBJ_FLAG_CLICKABLE);
 
     // Adjust table column widths
     uint16_t disp_width = lv_display_get_horizontal_resolution(NULL);
     uint16_t col_width = disp_width*TABLE_WIDTH_PERC / 100;
-    lv_table_set_col_width(table, 0, col_width*0.55);
-    lv_table_set_col_width(table, 1, col_width*0.45);
+    lv_table_set_col_width(packDataTable, 0, col_width*0.55);
+    lv_table_set_col_width(packDataTable, 1, col_width*0.45);
 
     // lv_obj_set_style_bg_opa(table, LV_OPA_TRANSP, 0);  // Make background transparent
-    lv_obj_set_scroll_dir(table, LV_DIR_VER);
+    lv_obj_set_scroll_dir(packDataTable, LV_DIR_VER);
 
     // Reduce row length via padding
     // lv_obj_set_style_pad_ver(table, 40, LV_PART_ITEMS);
 
     // Set some initial battery values
-    battery_widget_set_value(daly_bms_soc, 75);
-    battery_widget_set_value(our_soc, 80);
+    battery_widget_set_value(daly_bms_soc_bar, 75);
+    battery_widget_set_value(our_soc_bar, 80);
 
     // Adjust layout
     lv_obj_set_flex_align(main_cont, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);

@@ -90,9 +90,11 @@ extern "C" void app_main() {
 
 static void lv_gui_update_variables_task(void *pvParameter) {
     while (1) {
-        if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
-            // ui_main_tick();
-            xSemaphoreGive(xGuiSemaphore);
+        if (true == lvgl_ui_is_init){
+            if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
+                ui_main_tick();
+                xSemaphoreGive(xGuiSemaphore);
+            }
         }
         vTaskDelay(pdMS_TO_TICKS(UPDATE_GUI_VAR_TASK_DELAY_MS));
     }
@@ -121,7 +123,7 @@ static void daly_bms_task(void *pvParameter) {
             ui_manager_set_daly_soc_perc(&bms.get.packSOC);
             float soc = battery_soc.getSOC();
             ui_manager_set_our_soc_perc(&soc);
-            uint16_t cap = (uint16_t)bms.get.resCapacitymAh;
+            uint16_t cap = (uint16_t)(bms.get.resCapacitymAh/1000);
             ui_manager_set_daly_capacity_Ah(&cap);
             ui_manager_set_our_internal_resistance_mOhm(&res.internalResistance_f32);
 
