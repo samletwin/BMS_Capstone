@@ -14,8 +14,8 @@ typedef struct {
     float voltage_V_f;
     float current_A_f;
     uint8_t soh_perc_ui8;
-    uint8_t dalySoc_perc_ui8;
-    uint8_t ourSoc_perc_ui8;
+    float dalySoc_perc_f;  // Changed to float
+    float ourSoc_perc_f;   // Changed to float
     uint16_t dalyCapacity_Ah_ui16;
     float ourInternalResistance_mOhm_f;
 } pack_data_t;
@@ -28,25 +28,31 @@ typedef struct {
 void ui_manager_init(void);
 
 // Pack data getters and setters
-void ui_manager_set_pack_data(pack_data_t data);
+void ui_manager_set_pack_data(pack_data_t *data);
 pack_data_t ui_manager_get_pack_data(void);
 
 // Individual setters for pack data
-void ui_manager_set_pack_voltage_V(float voltage);
-void ui_manager_set_pack_current_A(float current);
-void ui_manager_set_pack_soh_perc(uint8_t soh);
-void ui_manager_set_daly_soc_perc(uint8_t soc);
-void ui_manager_set_our_soc_perc(uint8_t soc);
-void ui_manager_set_daly_capacity_Ah(uint16_t capacity);
-void ui_manager_set_our_internal_resistance_mOhm(float resistance);
+void ui_manager_set_pack_voltage_V(float *voltage);
+void ui_manager_set_pack_current_A(float *current);
+void ui_manager_set_pack_soh_perc(uint8_t *soh);
+void ui_manager_set_daly_soc_perc(float *soc);  // Changed to float
+void ui_manager_set_our_soc_perc(float *soc);   // Changed to float
+void ui_manager_set_daly_capacity_Ah(uint16_t *capacity);
+void ui_manager_set_our_internal_resistance_mOhm(float *resistance);
 
 // Cell data getters and setters
-void ui_manager_set_cell_data(int cell_index, cell_data_t data);
+void ui_manager_set_cell_data(int cell_index, cell_data_t *data);
 cell_data_t ui_manager_get_cell_data(int cell_index);
 
 // Individual setters for cell data
-void ui_manager_set_cell_voltage(int cell_index, float voltage);
-void ui_manager_set_cell_soc(int cell_index, float soc);
+void ui_manager_set_cell_voltage(int cell_index, float *voltage);
+void ui_manager_set_cell_soc(int cell_index, float *soc);
+
+// New function to set all cell voltages at once
+void ui_manager_set_all_cell_voltages(float *voltages);
+
+// New function to set all cell SOCs at once
+void ui_manager_set_all_cell_socs(float *socs);
 
 #ifdef __cplusplus
 } /* extern "C" */

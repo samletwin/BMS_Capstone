@@ -10,6 +10,7 @@ extern "C" {
 void ui_screen_init(void);
 lv_obj_t* ui_screen_get_menu(void);
 void ui_screen_create_menu(void);
+void ui_screen_tick_active(void);
 
 #ifdef __cplusplus
 } /* extern C */

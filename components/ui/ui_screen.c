@@ -13,8 +13,75 @@ static lv_obj_t* cellDataPage;
 static lv_obj_t* settingsPage;
 
 static lv_obj_t* currentLoadedSubPage = NULL;
+static bool show_voltage = true;  // Global variable to track what data to show
 
 static void cell_data_switch_cb(lv_event_t * e);
+
+// Add these function declarations at the top of the file
+static void tick_pack_data_screen(lv_obj_t *parent);
+static void tick_cell_data_screen(lv_obj_t *parent);
+
+// Implement the functions
+
+static void tick_pack_data_screen(lv_obj_t *parent)
+{
+    pack_data_t pack_data = ui_manager_get_pack_data();
+
+    // Update Daly BMS SOC battery
+    lv_obj_t *daly_bms_soc_bar = lv_obj_get_child(parent, 0);
+    battery_widget_set_value((battery_widget_t *)daly_bms_soc_bar, (uint16_t)pack_data.dalySoc_perc_f);
+
+    // Update Our SOC battery
+    lv_obj_t *our_soc_bar = lv_obj_get_child(parent, 1);
+    battery_widget_set_value((battery_widget_t *)our_soc_bar, (uint16_t)pack_data.ourSoc_perc_f);
+
+    // Update table values
+    lv_obj_t *table = lv_obj_get_child(parent, 2);
+    char buf[20];
+
+    snprintf(buf, sizeof(buf), "%.2fV", pack_data.voltage_V_f);
+    lv_table_set_cell_value(table, 0, 1, buf);
+    snprintf(buf, sizeof(buf), "%u%%", pack_data.soh_perc_ui8);
+    lv_table_set_cell_value(table, 1, 1, buf);
+    snprintf(buf, sizeof(buf), "%uAh", pack_data.dalyCapacity_Ah_ui16);
+    lv_table_set_cell_value(table, 2, 1, buf);
+    snprintf(buf, sizeof(buf), "%.2fA", pack_data.current_A_f);
+    lv_table_set_cell_value(table, 3, 1, buf);
+    snprintf(buf, sizeof(buf), "%.3f mOhm", pack_data.ourInternalResistance_mOhm_f);
+    lv_table_set_cell_value(table, 4, 1, buf);
+}
+
+static void tick_cell_data_screen(lv_obj_t *parent)
+{
+    lv_obj_t *cont = lv_obj_get_child(parent, 0);
+
+    for (int i = 0; i < 14; i++) {
+        lv_obj_t *cell = lv_obj_get_child(cont, i);
+        lv_obj_t *label = lv_obj_get_child(cell, 0);
+
+        cell_data_t cell_data = ui_manager_get_cell_data(i);
+
+        char buf[30];
+        if (show_voltage) {
+            snprintf(buf, sizeof(buf), "Cell %d\n%.3fV", i + 1, cell_data.voltage);
+        } else {
+            snprintf(buf, sizeof(buf), "Cell %d\n%.1f%%", i + 1, cell_data.soc);
+        }
+        lv_label_set_text(label, buf);
+    }
+}
+
+void ui_screen_tick_active(void)
+{
+    lv_obj_t *active_page = lv_menu_get_cur_main_page(menu);
+    
+    if (active_page == packDataPage) {
+        tick_pack_data_screen(active_page);
+    } else if (active_page == cellDataPage) {
+        tick_cell_data_screen(active_page);
+    }
+    // Add more conditions for other pages if needed
+}
 
 static void menuBackEventHandler(lv_event_t* e) {
     lv_obj_t* obj = lv_event_get_target(e);
@@ -70,12 +137,12 @@ static void create_pack_data_screen(lv_obj_t *parent)
     // Create Daly BMS SOC battery
     battery_widget_t *daly_bms_soc = battery_widget_create(battery_cont, false, "Daly BMS SOC");
     lv_obj_set_size(daly_bms_soc->bar, lv_pct(80), 50);
-    battery_widget_set_value(daly_bms_soc, pack_data.dalySoc_perc_ui8);
+    battery_widget_set_value(daly_bms_soc, (uint16_t)pack_data.dalySoc_perc_f);
 
     // Create Our SOC battery
     battery_widget_t *our_soc = battery_widget_create(battery_cont, false, "Our SOC");
     lv_obj_set_size(our_soc->bar, lv_pct(80), 50);
-    battery_widget_set_value(our_soc, pack_data.ourSoc_perc_ui8);
+    battery_widget_set_value(our_soc, (uint16_t)pack_data.ourSoc_perc_f);
 
 
     // Create table
@@ -138,7 +205,6 @@ static void create_pack_data_screen(lv_obj_t *parent)
 }
 
 
-static bool show_voltage = true;  // Global variable to track what data to show
 static void create_cell_data_screen(lv_obj_t *parent)
 {
     // Clear the previous content

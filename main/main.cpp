@@ -26,6 +26,9 @@
 #include "lvgl_example.h"
 #include "daly_bms_arduino.h"
 #include "sd_card_helper.h"
+#include "soc.h"
+#include "soh.h"
+#include "ui_manager.h"
 // #include "test_ui.h"
 
 /*********************
@@ -43,41 +46,44 @@ static void lv_gui_update_variables_task(void *pvParameter);
 
 SemaphoreHandle_t xGuiSemaphore;
 static bool lvgl_ui_is_init = false;
+static bool got_init_daly_value = false;
 static Daly_BMS_UART bms;
+static BatterySOC battery_soc = BatterySOC();
+static SOH battery_soh = SOH();
 
 /* ---------------------------------------------------------------------------------------
     APPLICATION MAIN
  --------------------------------------------------------------------------------------- */
 extern "C" void app_main() {
     /* INIT */
-#if defined(LOG_TO_SD_CARD) && defined(DISPLAY_CONNECTED)
-    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
-    lv_init();
-    // Wait a bit for LVGL to initialize
-    vTaskDelay(pdMS_TO_TICKS(100));
-    spi_full_init(SPI_INIT_BOTH);
-#elif defined(LOG_TO_SD_CARD)
-    spi_full_init(SPI_INIT_SD_LOG_ONLY);
-#elif defined(DISPLAY_CONNECTED)
-    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
-    lv_init();
-    // Wait a bit for LVGL to initialize
-    vTaskDelay(pdMS_TO_TICKS(100));
-    spi_full_init(SPI_INIT_DISPLAY_ONLY);
-#endif 
+// #if defined(LOG_TO_SD_CARD) && defined(DISPLAY_CONNECTED)
+//     ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
+//     lv_init();
+//     // Wait a bit for LVGL to initialize
+//     vTaskDelay(pdMS_TO_TICKS(100));
+//     spi_full_init(SPI_INIT_BOTH);
+// #elif defined(LOG_TO_SD_CARD)
+//     spi_full_init(SPI_INIT_SD_LOG_ONLY);
+// #elif defined(DISPLAY_CONNECTED)
+//     ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
+//     lv_init();
+//     // Wait a bit for LVGL to initialize
+//     vTaskDelay(pdMS_TO_TICKS(100));
+//     spi_full_init(SPI_INIT_DISPLAY_ONLY);
+// #endif 
 
-    #ifdef CONNECT_TO_DALY
+// #ifdef CONNECT_TO_DALY
     bms = Daly_BMS_UART();
 
     if (true != bms.Init())
         ESP_LOGE(TAG, "Error initializing daly BMS");
     xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
-    #endif
+// #endif
     
 
     #ifdef DISPLAY_CONNECTED
     xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 16384, NULL, 5, NULL, 0);
-    // xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
+    xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
     #endif
     
 }
@@ -85,6 +91,7 @@ extern "C" void app_main() {
 static void lv_gui_update_variables_task(void *pvParameter) {
     while (1) {
         if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
+            // ui_main_tick();
             xSemaphoreGive(xGuiSemaphore);
         }
         vTaskDelay(pdMS_TO_TICKS(UPDATE_GUI_VAR_TASK_DELAY_MS));
@@ -99,7 +106,30 @@ static void daly_bms_task(void *pvParameter) {
         if (true == retVal) {
             // bms.printBmsStats();
             // bms.printBmsAlarms();
+            if (false == got_init_daly_value) {
+                if (bms.get.packVoltage >= 2.0f) {
+                    got_init_daly_value = true;
+                    battery_soc.initialize(bms.get.packVoltage, 14, 4, 4.0244f);
+                }
+            }
+            else {
+                battery_soc.update(bms.get.packCurrent);
+            }
+            soh_result res = battery_soh.MovingLeastSquares(bms.get.packCurrent, bms.get.packVoltage);
+            ui_manager_set_pack_voltage_V(&bms.get.packVoltage);
+            ui_manager_set_pack_current_A(&bms.get.packCurrent);
+            ui_manager_set_daly_soc_perc(&bms.get.packSOC);
+            float soc = battery_soc.getSOC();
+            ui_manager_set_our_soc_perc(&soc);
+            uint16_t cap = (uint16_t)bms.get.resCapacitymAh;
+            ui_manager_set_daly_capacity_Ah(&cap);
+            ui_manager_set_our_internal_resistance_mOhm(&res.internalResistance_f32);
+
+            ui_manager_set_all_cell_voltages(bms.get.cellVmV);
+
+
             ESP_LOGI(TAG, "BMS Stats: %.2fV, %.2fA, %.2f perc", bms.get.packVoltage, bms.get.packCurrent, bms.get.packSOC);
+            
         }
         else {
             ESP_LOGE(TAG, "Failed to communicate with DALY BMS");
@@ -111,6 +141,12 @@ static void daly_bms_task(void *pvParameter) {
 static void lv_gui_main_task(void *pvParameter) {
     (void) pvParameter;
     xGuiSemaphore = xSemaphoreCreateMutex();
+
+    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
+    lv_init();
+    // Wait a bit for LVGL to initialize
+    vTaskDelay(pdMS_TO_TICKS(100));
+    spi_full_init(SPI_INIT_DISPLAY_ONLY);
 
     lv_color_t* buf1 = (lv_color_t*)heap_caps_malloc((HX8357_BUF_SIZE) * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf1 != NULL);

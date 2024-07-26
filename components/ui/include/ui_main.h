@@ -9,6 +9,7 @@ extern "C" {
 
 void ui_main_init(void);
 void ui_main_show(void);
+void ui_main_tick(void);
 
 #ifdef __cplusplus
 } /* extern C */

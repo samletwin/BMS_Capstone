@@ -1,21 +1,25 @@
 #ifndef SOH_H
 #define SOH_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
+#include "esp_dsp.h"
 
-typedef struct {
+struct soh_result {
     float OCV_f32;
     float internalResistance_f32;
-} soh_result;
+};
 
-soh_result soh_LeastSquares(const int16_t current_mA[], const uint16_t voltage_mV[], uint16_t size, bool debug);
+class SOH {
+private:
+    void printMat(const dspm::Mat* mat);
+    dspm::Mat P;  // Covariance matrix
+    dspm::Mat phi;  // State vector [OCV, R_internal]
 
-#ifdef __cplusplus
-}
-#endif
+public:
+    SOH();
 
-#endif /* SOH_H */
+    soh_result LeastSquares(const int16_t *current_mA, const uint16_t *voltage_mV, uint16_t size, bool debug);
+    soh_result MovingLeastSquares(float current_mA, float voltage_mV);
+};
+
+#endif // SOH_H

@@ -24,3 +24,9 @@ void ui_main_show(void)
     }
     lv_scr_load(menu);
 }
+
+
+void ui_main_tick(void)
+{
+    ui_screen_tick_active();
+}
