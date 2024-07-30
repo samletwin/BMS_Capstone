@@ -44,7 +44,7 @@ static void daly_bms_task(void *pvParameter);
 static void lv_gui_main_task(void *pvParameter);
 static void lv_gui_update_variables_task(void *pvParameter);
 
-SemaphoreHandle_t xGuiSemaphore;
+static SemaphoreHandle_t xGuiSemaphore;
 static bool lvgl_ui_is_init = false;
 static bool got_init_daly_value = false;
 static Daly_BMS_UART bms;
@@ -56,35 +56,35 @@ static SOH battery_soh = SOH();
  --------------------------------------------------------------------------------------- */
 extern "C" void app_main() {
     /* INIT */
-// #if defined(LOG_TO_SD_CARD) && defined(DISPLAY_CONNECTED)
-//     ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
-//     lv_init();
-//     // Wait a bit for LVGL to initialize
-//     vTaskDelay(pdMS_TO_TICKS(100));
-//     spi_full_init(SPI_INIT_BOTH);
-// #elif defined(LOG_TO_SD_CARD)
-//     spi_full_init(SPI_INIT_SD_LOG_ONLY);
-// #elif defined(DISPLAY_CONNECTED)
-//     ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
-//     lv_init();
-//     // Wait a bit for LVGL to initialize
-//     vTaskDelay(pdMS_TO_TICKS(100));
-//     spi_full_init(SPI_INIT_DISPLAY_ONLY);
-// #endif 
+#if defined(LOG_TO_SD_CARD) && defined(DISPLAY_CONNECTED)
+    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
+    lv_init();
+    // Wait a bit for LVGL to initialize
+    vTaskDelay(pdMS_TO_TICKS(100));
+    spi_full_init(SPI_INIT_BOTH);
+#elif defined(LOG_TO_SD_CARD)
+    spi_full_init(SPI_INIT_SD_LOG_ONLY);
+#elif defined(DISPLAY_CONNECTED)
+    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
+    lv_init();
+    // Wait a bit for LVGL to initialize
+    vTaskDelay(pdMS_TO_TICKS(100));
+    spi_full_init(SPI_INIT_DISPLAY_ONLY);
+#endif 
 
-// #ifdef CONNECT_TO_DALY
+#ifdef CONNECT_TO_DALY
     bms = Daly_BMS_UART();
 
     if (true != bms.Init())
         ESP_LOGE(TAG, "Error initializing daly BMS");
     xTaskCreate(daly_bms_task, "Daly BMS Task", 4096, NULL, 1, NULL);
-// #endif
+#endif
     
 
-    #ifdef DISPLAY_CONNECTED
+#ifdef DISPLAY_CONNECTED
     xTaskCreatePinnedToCore(lv_gui_main_task, "gui", 16384, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(lv_gui_update_variables_task, "gui var update task", 2048, NULL, 0, NULL, 1);
-    #endif
+#endif
     
 }
 
@@ -92,6 +92,7 @@ static void lv_gui_update_variables_task(void *pvParameter) {
     while (1) {
         if (true == lvgl_ui_is_init){
             if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
+                ESP_LOGD(TAG, "Ticking ui");
                 ui_main_tick();
                 xSemaphoreGive(xGuiSemaphore);
             }
@@ -144,12 +145,6 @@ static void lv_gui_main_task(void *pvParameter) {
     (void) pvParameter;
     xGuiSemaphore = xSemaphoreCreateMutex();
 
-    ESP_LOGI(TAG, "Free heap before LVGL init: %ld", esp_get_free_heap_size());
-    lv_init();
-    // Wait a bit for LVGL to initialize
-    vTaskDelay(pdMS_TO_TICKS(100));
-    spi_full_init(SPI_INIT_DISPLAY_ONLY);
-
     lv_color_t* buf1 = (lv_color_t*)heap_caps_malloc((HX8357_BUF_SIZE) * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf1 != NULL);
 
@@ -184,10 +179,13 @@ static void lv_gui_main_task(void *pvParameter) {
 
     
     while (1) {
-
         if (pdTRUE == xSemaphoreTake(xGuiSemaphore, portMAX_DELAY)) {
+            // ESP_LOGD(TAG, "Calling lv task handler");
             lv_task_handler();
             xSemaphoreGive(xGuiSemaphore);
+        }
+        else {
+            // ESP_LOGD(TAG, "Not Calling lv task handler");
         }
 
         // Yield to other tasks
@@ -195,6 +193,7 @@ static void lv_gui_main_task(void *pvParameter) {
     }
 
     /* A task should NEVER return */
+    ESP_LOGE(TAG, "LVGL Task returning..");
     free(buf1);
     free(buf2);
     vTaskDelete(NULL);

@@ -2,7 +2,7 @@
 #define MAIN_CFG_H
 
 #define DISPLAY_CONNECTED        
-#define CONNECT_TO_DALY
+// #define CONNECT_TO_DALY
 // #define LOG_TO_SD_CARD
 
 #define DALY_BMS_UPDATE_TASK_DELAY_MS 1000
@@ -12,6 +12,5 @@
 #define GUI_TASK_DELAY_MS 10
 #define UPDATE_GUI_VAR_TASK_DELAY_MS 500
 
-#define PRINT_ADC_READINGS_TO_SERIAL true
 
 #endif /* MAIN_CFG_H */

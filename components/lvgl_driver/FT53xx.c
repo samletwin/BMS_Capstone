@@ -138,5 +138,5 @@ void ft53xx_read(lv_indev_t  *indev, lv_indev_data_t *data) {
     else {
         data->point.y = 0;
     }
-    // ESP_LOGD(TAG, "X=%i Y=%i", data->point.x, data->point.y);
+    ESP_LOGD(TAG, "X=%li Y=%li", data->point.x, data->point.y);
 }
