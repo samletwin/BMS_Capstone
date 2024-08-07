@@ -9,12 +9,12 @@ extern "C" {
 #include "hal/spi_types.h"
 
 
-#define DISP_CS_PIN         2
-#define SD_CARD_CS_PIN      3
+#define DISP_CS_PIN         10
+#define SD_CARD_CS_PIN      -1
 
-#define SPI_MOSI_PIN        8
-#define SPI_MISO_PIN        9
-#define SPI_CLK_PIN         20
+#define SPI_MOSI_PIN        7
+#define SPI_MISO_PIN        6
+#define SPI_CLK_PIN         21
 #define SPI_QUADWP_PIN      -1
 #define SPI_QUADHD_PIN      -1
 

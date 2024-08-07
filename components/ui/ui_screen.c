@@ -281,6 +281,12 @@ static void create_cell_data_screen(lv_obj_t *parent)
     lv_obj_center(btn_label);
 }
 
+static void create_settings_screen(lv_obj_t *parent)
+{
+    
+}
+
+
 static void cell_data_switch_cb(lv_event_t * e)
 {
     show_voltage = !show_voltage;

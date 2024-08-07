@@ -17,8 +17,8 @@ extern "C" {
 
 #include "driver/i2c.h"
 
-#define I2C_SDA_PIN 7
-#define I2C_SCL_PIN 21
+#define I2C_SDA_PIN 8
+#define I2C_SCL_PIN 20
 #define I2C_FREQ_HZ 4*1000*100 // 400 kHz
 #define I2C_PORT    I2C_NUM_0
 

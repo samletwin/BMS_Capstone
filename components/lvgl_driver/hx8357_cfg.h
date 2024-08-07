@@ -7,9 +7,9 @@ extern "C" {
 
 #include "hx8357.h"
 
-#define HX8357_DC             10
-#define HX8357_RST            4
-#define HX8357_USE_RST        1
+#define HX8357_DC             5
+#define HX8357_RST            -1
+#define HX8357_USE_RST        0
 #define HX8357_INVERT_COLORS  0
 
 /* DISP_BUF_SIZE value doesn't have an special meaning, but it's the size
